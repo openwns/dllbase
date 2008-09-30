@@ -1,4 +1,4 @@
-libname = 'dll'
+libname = 'dllbase'
 srcFiles = []
 hppFiles = []
 pyconfigs =  []
