@@ -40,6 +40,7 @@
 #include <WNS/service/dll/Address.hpp>
 
 #include <WNS/container/Registry.hpp>
+#include <DLL/UpperConvergence.hpp>
 
 namespace dll {
 
@@ -100,6 +101,9 @@ namespace dll {
 			return fun;
 		}
 
+		dll::UpperConvergence*
+		getUpperConvergence();
+
 		/**
 		 * @brief Access the Station Name. This method is deprecated - it is
 		 * recommended to use the  node's getName() instead
@@ -133,6 +137,7 @@ namespace dll {
 
 		virtual void
 		doStartup();
+		dll::UpperConvergence* dllUpperConvergence;
 
 		wns::ldk::fun::Main* fun;
 		wns::pyconfig::View config;

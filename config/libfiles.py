@@ -6,6 +6,7 @@ srcFiles = [
     'src/UpperConvergence.cpp',
     'src/PriorityProvider.cpp',
     'src/RANG.cpp',
+    'src/QoSClassProvider.cpp',
 
     # Services
     'src/services/control/Association.cpp',
@@ -44,6 +45,7 @@ hppFiles = [
 'src/Module.hpp',
 'src/PriorityProvider.hpp',
 'src/RANG.hpp',
+'src/QoSClassProvider.hpp',
 'src/services/control/Association.hpp',
 'src/services/management/InterferenceCache.hpp',
 'src/services/management/tests/InterferenceCacheTest.hpp',
@@ -54,6 +56,7 @@ hppFiles = [
 ]
 
 pyconfigs = [
+'dll/QoSClassProvider.py',
 'dll/Services.py',
 'dll/UpperConvergence.py',
 'dll/CompoundSwitch.py',

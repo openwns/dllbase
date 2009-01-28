@@ -127,6 +127,7 @@ Layer2::doStartup()
 		// register UpperConvergence as the DLL DataTransmissionService
 		addService(config.get<std::string>("dataTransmission"), upperConvergence);
 		addService(config.get<std::string>("notification"), upperConvergence);
+		addService(config.get<std::string>("flowEstablishmentAndRelease"), upperConvergence);
 		upperConvergence->setMACAddress(address);
 	}
 
@@ -139,6 +140,12 @@ Layer2::~Layer2()
 	fun = NULL;
     }
 } // ~Layer2
+
+dll::UpperConvergence*
+Layer2::getUpperConvergence()
+{
+	return dllUpperConvergence;
+}
 
 Layer2::StationIDType
 Layer2::getID() const
