@@ -101,9 +101,6 @@ namespace dll {
 			return fun;
 		}
 
-		dll::UpperConvergence*
-		getUpperConvergence();
-
 		/**
 		 * @brief Access the Station Name. This method is deprecated - it is
 		 * recommended to use the  node's getName() instead
