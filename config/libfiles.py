@@ -4,9 +4,7 @@ srcFiles = [
     'src/StationManager.cpp',
     'src/Layer2.cpp',
     'src/UpperConvergence.cpp',
-    'src/PriorityProvider.cpp',
     'src/RANG.cpp',
-    'src/QoSClassProvider.cpp',
 
     # Services
     'src/services/control/Association.cpp',
@@ -27,7 +25,6 @@ srcFiles = [
     'src/tests/LayerStub.cpp',
     'src/tests/FUTestBase.cpp',
     'src/services/management/tests/InterferenceCacheTest.cpp',
-    'src/tests/PriorityProviderTest.cpp',
 ]
 
 hppFiles = [
@@ -43,9 +40,7 @@ hppFiles = [
 'src/compoundSwitch/Filter.hpp',
 'src/Layer2.hpp',
 'src/Module.hpp',
-'src/PriorityProvider.hpp',
 'src/RANG.hpp',
-'src/QoSClassProvider.hpp',
 'src/services/control/Association.hpp',
 'src/services/management/InterferenceCache.hpp',
 'src/services/management/tests/InterferenceCacheTest.hpp',
@@ -56,12 +51,10 @@ hppFiles = [
 ]
 
 pyconfigs = [
-'dll/QoSClassProvider.py',
 'dll/Services.py',
 'dll/UpperConvergence.py',
 'dll/CompoundSwitch.py',
 'dll/Layer2.py',
-'dll/PriorityProvider.py',
 'dll/DLL.py',
 'dll/Association.py',
 'dll/__init__.py',
