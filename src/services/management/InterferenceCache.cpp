@@ -78,6 +78,65 @@ InterferenceCache::InterferenceCache( wns::ldk::ManagementServiceRegistry* msr, 
 
 }
 
+void InterferenceCache::storeMeasurements( wns::node::Interface* node, wns::service::phy::power::PowerMeasurementPtr rxPowerMeasurement, ValueOrigin origin, int subBand )
+{
+	wns::Power carrier = rxPowerMeasurement->getRxPower();
+	wns::Power interference = rxPowerMeasurement->getOmniInterferencePower();
+	wns::Ratio pathloss = rxPowerMeasurement->getPathLoss();
+	InterferenceCacheKey key(node, subBand);
+	double alpha;
+	if (origin == Local)
+		alpha = alphaLocal_;
+	else
+		alpha = alphaRemote_;
+
+	Node2Power::iterator n2cait =
+		node2CarrierAverage_.find( key );
+	if ( n2cait == node2CarrierAverage_.end() )
+		node2CarrierAverage_[key] = carrier;
+	else
+		node2CarrierAverage_[key] =
+			node2CarrierAverage_[key] * (1.0 - alpha) + carrier * alpha;
+	Node2Double::iterator n2caseit =
+		node2CarrierSqExp_.find( key );
+	if ( n2caseit == node2CarrierSqExp_.end() )
+		node2CarrierSqExp_[key] = carrier.get_mW() * carrier.get_mW();
+	else
+		node2CarrierSqExp_[key] =
+			(1.0 - alpha) * node2CarrierSqExp_[key] +  carrier.get_mW() * carrier.get_mW() * alpha;
+	Node2Power::iterator n2iait =
+		node2InterferenceAverage_.find( key );
+	if ( n2iait == node2InterferenceAverage_.end() )
+		node2InterferenceAverage_[key] = interference;
+	else
+		node2InterferenceAverage_[key] =
+			 node2InterferenceAverage_[key] * (1.0 - alpha) + interference * alpha;
+
+	Node2Double::iterator n2iaseit =
+		node2InterferenceSqExp_.find( key );
+	if ( n2iaseit == node2InterferenceSqExp_.end() )
+		node2InterferenceSqExp_[key] = interference.get_mW() * interference.get_mW();
+	else
+		node2InterferenceSqExp_[key] =
+			 node2InterferenceSqExp_[key] * (1.0 - alpha) + interference.get_mW() * interference.get_mW() * alpha ;
+	Node2Double::iterator n2pit =
+		node2pathloss.find( key );
+	if ( n2pit == node2pathloss.end() )
+		node2pathloss[key] = pathloss.get_factor();
+	else
+		node2pathloss[key] = (1.0 - alpha) * node2pathloss[key] + alpha * pathloss.get_factor();
+
+	MESSAGE_BEGIN(VERBOSE, logger, m, "Storing C for ");
+	m << node->getName() << ": " << carrier << ". (origin=" << ( origin==Local ? "Local" : "Remote" ) << ")";
+	MESSAGE_END();
+	MESSAGE_BEGIN(VERBOSE, logger, m, "Storing I for ");
+	m << node->getName() << ": " << interference << ". (origin=" << ( origin==Local ? "Local" : "Remote" ) << ")";
+	MESSAGE_END();
+	MESSAGE_BEGIN(VERBOSE, logger, m, "Storing Pathloss for ");
+	m << node->getName() << ": " << pathloss << ". (origin=" << ( origin==Local ? "Local" : "Remote" ) << ")";
+	MESSAGE_END();
+}
+
 void InterferenceCache::storeCarrier( wns::node::Interface* node, const wns::Power& carrier, ValueOrigin origin, int subBand )
 {
 	InterferenceCacheKey key(node, subBand);

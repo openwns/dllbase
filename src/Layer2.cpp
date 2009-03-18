@@ -31,6 +31,7 @@
 
 #include <WNS/ldk/ControlServiceInterface.hpp>
 #include <WNS/ldk/ManagementServiceInterface.hpp>
+#include <WNS/service/dll/StationTypes.hpp>
 #include <WNS/service/phy/ofdma/Handler.hpp>
 #include <WNS/service/phy/ofdma/DataTransmission.hpp>
 #include <WNS/ldk/utils.hpp>
@@ -51,7 +52,7 @@ Layer2::Layer2(wns::node::Interface* _node, const wns::pyconfig::View& _config, 
 	logger(_config.get("logger")),
 	stationManager( (_sm == NULL) ? TheStationManager::getInstance() : _sm),
 	stationID(config.get<StationIDType>("stationID")),
-	type(StationTypes::fromString(config.get<std::string>("stationType"))),
+	type(wns::service::dll::StationTypes::fromString(config.get<std::string>("stationType"))),
 	address(config.get<wns::service::dll::UnicastAddress>("address")),
 	ring(config.get<uint32_t>("ring")),
 	air(),
@@ -68,7 +69,8 @@ Layer2::doStartup()
 		{ // new method for ProbeBus
 			agent.setContext("MAC.Id", stationID);
 			agent.setContext("MAC.Ring", ring);
-			agent.setContext("MAC.StationType", StationTypes::fromString(config.get<std::string>("stationType")));
+			agent.setContext("MAC.StationType", type);
+			// wns::service::dll::StationTypes::fromString(config.get<std::string>("stationType")));
 
 			wns::probe::bus::ContextProviderCollection& collection =
 				getNode()->getContextProviderCollection();

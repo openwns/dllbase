@@ -29,18 +29,16 @@
 #define DLL_LAYER2_HPP
 
 #include <DLL/services/control/Association.hpp>
+#include <DLL/UpperConvergence.hpp>
 
 #include <WNS/logger/Logger.hpp>
-
 #include <WNS/Enum.hpp>
 #include <WNS/ldk/fun/Main.hpp>
 #include <WNS/ldk/Layer.hpp>
 #include <WNS/node/component/Component.hpp>
 #include <WNS/pyconfig/View.hpp>
 #include <WNS/service/dll/Address.hpp>
-
 #include <WNS/container/Registry.hpp>
-#include <DLL/UpperConvergence.hpp>
 
 namespace dll {
 
@@ -49,14 +47,14 @@ namespace dll {
 
 	/** @brief To distinguish between different types of stations.
 	 *  WiMAX has the distinction of remote terminals yet but it supposed to be
-	 *  removed later on
-	 */
+	 *  moved to libwns ... WNS/service/dll/StationTypes.hpp
 	ENUM_BEGIN(StationTypes);
 	ENUM(AP,  1);
 	ENUM(FRS, 2);
 	ENUM(UT,  3);
 	ENUM(RT, 4);
 	ENUM_END();
+	*/
 
 	/** @brief The DLL Component Base Class.
 	 *

@@ -30,6 +30,22 @@ namespace wns { namespace node {
 namespace dll {
 //	class RANG;
 
+	typedef std::list<wns::node::Interface*> NodeList;
+	typedef std::list<wns::service::dll::UnicastAddress> MACList;
+
+	inline std::string
+	printNodeList(const dll::NodeList& list) {
+		std::stringstream s;
+		s << "(";
+		for (dll::NodeList::const_iterator iter = list.begin();
+		     iter != list.end(); ++iter)
+		{
+		  s << (*iter)->getName() << ",";
+		}
+		s << ")";
+		return s.str();
+	}
+
 	/** @brief The StationManager is an information database for all DLLs in the
 	 * simulator.
 	 *
@@ -61,6 +77,7 @@ namespace dll {
 		Layer2* getStationByID(Layer2::StationIDType) const;
 		Layer2* getStationByNode(wns::node::Interface*) const;
 		wns::node::Interface* getNodeByID(Layer2::StationIDType) const;
+		NodeList getNodeList() const;
 		//@}
 
 	private:

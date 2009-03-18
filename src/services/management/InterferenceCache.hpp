@@ -36,6 +36,7 @@
 #include <WNS/logger/Logger.hpp>
 #include <WNS/node/Interface.hpp>
 #include <WNS/ldk/PyConfigCreator.hpp>
+#include <WNS/service/phy/power/PowerMeasurement.hpp>
 
 namespace wns {
 	namespace ldk {
@@ -188,6 +189,17 @@ namespace dll { namespace services { namespace management {
 			Local,
 			Remote
 		};
+
+		/**
+		 * @brief Store the received power measurements of node in the InterferenceCache.
+		 *
+		 * The received power values of node is stored in the
+		 * InterferenceCache. The ValueOrigin tells whether the local node
+		 * or a remote node writes into the cache.
+		 *
+		 * @sa storeInterference()
+		 */
+		void storeMeasurements( wns::node::Interface* node, wns::service::phy::power::PowerMeasurementPtr rxPowerMeasurement, ValueOrigin origin, int subBand = 0);
 
 		/**
 		 * @brief Store the received carrier power of node in the InterferenceCache.

@@ -33,8 +33,8 @@ StationManager::~StationManager()
 
 void
 StationManager::registerStation(Layer2::StationIDType id,
-								wns::service::dll::UnicastAddress adr,
-								Layer2* layer)
+				wns::service::dll::UnicastAddress adr,
+				Layer2* layer)
 {
 	//assure(! layerLookup.knows(id), "Station already registered.");
 
@@ -89,4 +89,14 @@ StationManager::getStationByMAC(wns::service::dll::UnicastAddress adr) const
 	return macAdrLookup.find(adr);
 }
 
+NodeList
+StationManager::getNodeList() const
+{
+  NodeList nodeList;
+  for(NodeLookup::const_iterator iter = nodeLookup.begin(); iter != nodeLookup.end(); ++iter)
+  {
+    nodeList.push_back(iter->first);
+  }
+  return nodeList;
+}
 
