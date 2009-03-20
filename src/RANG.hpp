@@ -59,7 +59,7 @@ namespace dll {
 			const wns::service::dll::UnicastAddress& _peer,
 			const wns::osi::PDUPtr& _data,
 			wns::service::dll::protocolNumber protocol,
-			wns::service::dll::FlowID _dllFlowID = 0);
+			wns::service::dll::FlowID _dllFlowID = wns::service::dll::NoFlowID);
 		//@}
 
 		virtual wns::service::dll::UnicastAddress
@@ -69,7 +69,7 @@ namespace dll {
 		/** @name wns::service::dll::Notification service */
 		//@{
 		virtual void
-		registerHandler(wns::service::dll::protocolNumber protocol, 
+		registerHandler(wns::service::dll::protocolNumber protocol,
 				wns::service::dll::Handler* _dh);
 		//@}
 
@@ -77,7 +77,7 @@ namespace dll {
 		//@{
 		/** @brief standard onData method */
 		virtual void onData(const wns::osi::PDUPtr& _data,
-				    wns::service::dll::FlowID _dllFlowID = 0);
+				    wns::service::dll::FlowID _dllFlowID = wns::service::dll::NoFlowID);
 
 		/** @brief Modified Handler Interface for APs.
 		 *
@@ -99,7 +99,7 @@ namespace dll {
 		void onData(const wns::osi::PDUPtr& _data,
 				  wns::service::dll::UnicastAddress _sourceMACAddress,
 				  wns::service::dll::UnicastDataTransmission* _ap,
-			          wns::service::dll::FlowID _dllFlowID = 0);
+			          wns::service::dll::FlowID _dllFlowID = wns::service::dll::NoFlowID);
 		//@}
 
 		/** @name wns::node::component::Component Interface */

@@ -143,12 +143,6 @@ Layer2::~Layer2()
     }
 } // ~Layer2
 
-dll::UpperConvergence*
-Layer2::getUpperConvergence()
-{
-	return dllUpperConvergence;
-}
-
 Layer2::StationIDType
 Layer2::getID() const
 {

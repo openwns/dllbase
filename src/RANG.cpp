@@ -23,9 +23,9 @@
 using namespace dll;
 
 STATIC_FACTORY_REGISTER_WITH_CREATOR(RANG,
-									 wns::node::component::Interface,
-									 "dll.RANG",
-									 wns::node::component::ConfigCreator);
+				     wns::node::component::Interface,
+				     "dll.RANG",
+				     wns::node::component::ConfigCreator);
 
 RANG::RANG(wns::node::Interface* node, const wns::pyconfig::View& _config) :
 	wns::node::component::Component(node, _config),
@@ -110,7 +110,7 @@ void
 RANG::onWorldCreated()
 {
 	int numAPs = config.len("dllDataTransmissions");
-	assure( numAPs == config.len("dllNotifications"), 
+	assure( numAPs == config.len("dllNotifications"),
 			"mismatch in number of DataTransmission / Notification services");
 	// browse through the list of connected APs
 	for (int i=0; i<numAPs; ++i)
@@ -118,7 +118,7 @@ RANG::onWorldCreated()
 		wns::node::component::FQSN dataTransmission(config.get<wns::pyconfig::View>("dllDataTransmissions",i));
 		wns::node::component::FQSN notification(config.get<wns::pyconfig::View>("dllNotifications",i));
 
-		dll::UpperConvergence* dataTransmissionService = 
+		dll::UpperConvergence* dataTransmissionService =
 			getRemoteService<dll::UpperConvergence*>(dataTransmission);
 		dll::UpperConvergence* notificationService =
 			getRemoteService<dll::UpperConvergence*>(notification);

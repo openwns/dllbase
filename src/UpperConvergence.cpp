@@ -219,6 +219,3 @@ APUpperConvergence::getRANG()
 	assure(dataHandler, "RANG hasn't been set");
 	return dataHandler;
 }
-
-
-

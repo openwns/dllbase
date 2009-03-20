@@ -29,8 +29,6 @@ from openwns.pyconfig import attrsetter
 
 import openwns.node
 import openwns.logger
-from  PriorityProvider import PriorityProvider
-from  QoSClassProvider import QoSClassProvider
 class LinkHandler:
 
     type = "wns.ldk.SimpleLinkHandler"
@@ -96,9 +94,6 @@ class Layer2( openwns.node.Component ):
     # Name of the UpperConvergence FU
     upperConvergenceName = None
 
-    # Name of the Priority Provider FU
-    priorityProvider = None
-    qosClassProvider = None
     #
     # layer2 Constructor
     #
@@ -116,9 +111,7 @@ class Layer2( openwns.node.Component ):
         self.logger = openwns.logger.Logger("DLL", "L2", True, parentLogger)
         self.linkHandler = LinkHandler(self.logger)
         self.upperConvergenceName = 'upperConvergence'
-        self.priorityProvider = PriorityProvider()
         attrsetter(self, kw)
-        self.qosClassProvider = QoSClassProvider()
 
     def setPhyDataTransmission(self, serviceName):
         self.phyDataTransmission = serviceName

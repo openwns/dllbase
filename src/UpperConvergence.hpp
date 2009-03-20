@@ -28,11 +28,9 @@
 #include <WNS/service/dll/Handler.hpp>
 #include <WNS/service/dll/FlowID.hpp>
 #include <WNS/service/qos/QoSClasses.hpp>
-#include <WNS/distribution/Distribution.hpp> // TODO: remove this
 #include <WNS/pyconfig/View.hpp>
 
 namespace dll {
-	//typedef int32_t Port;
 	class RANG;
 
 	/** @brief Command contributed by the UpperConvergence FU of the Data
@@ -171,7 +169,7 @@ namespace dll {
 
 		bool hasRANG();
 		dll::RANG* getRANG();
-//	private:
+	protected:
 		RANG* dataHandler;
 	};
 
