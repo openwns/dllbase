@@ -85,7 +85,7 @@ namespace dll { namespace tests {
 
 			CPPUNIT_ASSERT_NO_THROW( ppc = pp->getCommand(pool) );
 			CPPUNIT_ASSERT( ppc->local.priority == false );
-			CPPUNIT_ASSERT_EQUAL( ppc->getSize(), 0 );
+			CPPUNIT_ASSERT_EQUAL( ppc->getSize(), Bit(0) );
 
 			delete pool;
 		}
