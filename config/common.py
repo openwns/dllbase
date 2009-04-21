@@ -10,6 +10,6 @@ commonEnv = CNBSEnvironment(PROJNAME       = 'dll',
                             SHORTCUTS      = True,
                             DEFAULTVERSION = True,
                             FLATINCLUDES   = False,
-			    REVISIONCONTROL = RCS.Bazaar('../', 'DLLBase', 'main', '0.1'),
+                            REVISIONCONTROL = RCS.Bazaar('../', 'DLLBase', 'main', '0.1'),
                             )
 Return('commonEnv')

@@ -82,7 +82,7 @@ class FilterName(Filter):
 
     def __init__(self,name,**kw):
         super(FilterFilterName, self).__init__(name)
-	attrsetter(self, kw)
+        attrsetter(self, kw)
 
 
 class FilterCommand(Filter):
@@ -92,7 +92,7 @@ class FilterCommand(Filter):
     def __init__(self, name, commandProvider, **kw):
         super(FilterCommand, self).__init__(name)
         self.commandProvider = commandProvider
-	attrsetter(self, kw)
+        attrsetter(self, kw)
 
 class FilterMACAddress(Filter):
     __plugin__ = "dll.compoundSwitch.filter.FilterMACAddress"
