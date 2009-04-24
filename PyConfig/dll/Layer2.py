@@ -38,7 +38,7 @@ class LinkHandler:
     wakeupLogger = None
     onDataLogger = None
 
-    traceCompoundJourney = True
+    traceCompoundJourney = False
 
     def __init__(self, parentLogger = None):
         self.isAcceptingLogger = openwns.logger.Logger("WNS", "LinkHandler", True, parentLogger)

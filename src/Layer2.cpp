@@ -70,7 +70,6 @@ Layer2::doStartup()
 			agent.setContext("MAC.Id", stationID);
 			agent.setContext("MAC.Ring", ring);
 			agent.setContext("MAC.StationType", type);
-			// wns::service::dll::StationTypes::fromString(config.get<std::string>("stationType")));
 
 			wns::probe::bus::ContextProviderCollection& collection =
 				getNode()->getContextProviderCollection();

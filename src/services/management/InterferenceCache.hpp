@@ -197,7 +197,9 @@ namespace dll { namespace services { namespace management {
 		 * InterferenceCache. The ValueOrigin tells whether the local node
 		 * or a remote node writes into the cache.
 		 *
+		 * @sa storeCarrier()
 		 * @sa storeInterference()
+		 * @sa storePathloss()
 		 */
 		void storeMeasurements( wns::node::Interface* node, wns::service::phy::power::PowerMeasurementPtr rxPowerMeasurement, ValueOrigin origin, int subBand = 0);
 
@@ -208,7 +210,9 @@ namespace dll { namespace services { namespace management {
 		 * InterferenceCache. The ValueOrigin tells whether the local node
 		 * or a remote node writes into the cache.
 		 *
-		 * @sa storeInterference()
+		 * Obsolete for new code. But still used in unitTests. Therefore not removed.
+		 *
+		 * @sa storeMeasurements()
 		 */
 		void storeCarrier( wns::node::Interface* node, const wns::Power& carrier, ValueOrigin origin, int subBand = 0);
 
@@ -220,12 +224,17 @@ namespace dll { namespace services { namespace management {
 		 * InterferenceCache. The ValueOrigin tells whether the local node
 		 * or a remote node writes into the cache.
 		 *
-		 * @sa storeCarrier()
+		 * Obsolete for new code. But still used in unitTests. Therefore not removed.
+		 *
+		 * @sa storeMeasurements()
 		 */
 		void storeInterference( wns::node::Interface* node, const wns::Power& interference, ValueOrigin origin, int subBand = 0);
 
 		/**
 		 * @brief Store the estimated pathloss (including antenna gains) to a node in the InterferenceCache.
+		 *
+		 * Obsolete for new code. But still used in unitTests. Therefore not removed.
+		 * @sa storeMeasurements()
 		 */
 		void storePathloss( wns::node::Interface* node, const wns::Ratio& pathloss, ValueOrigin origin, int subBand = 0);
 

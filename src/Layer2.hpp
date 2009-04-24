@@ -45,17 +45,6 @@ namespace dll {
 	class StationManager;
 	class UpperConvergence;
 
-	/** @brief To distinguish between different types of stations.
-	 *  WiMAX has the distinction of remote terminals yet but it supposed to be
-	 *  moved to libwns ... WNS/service/dll/StationTypes.hpp
-	ENUM_BEGIN(StationTypes);
-	ENUM(AP,  1);
-	ENUM(FRS, 2);
-	ENUM(UT,  3);
-	ENUM(RT, 4);
-	ENUM_END();
-	*/
-
 	/** @brief The DLL Component Base Class.
 	 *
 	 * Inherited by the WinProSt and WiMAC Data Link Layers. This class is
