@@ -1,28 +1,13 @@
-/*******************************************************************************
- * This file is part of openWNS (open Wireless Network Simulator)
- * _____________________________________________________________________________
- *
- * Copyright (C) 2004-2007
- * Chair of Communication Networks (ComNets)
- * Kopernikusstr. 5, D-52074 Aachen, Germany
- * phone: ++49-241-80-27910,
- * fax: ++49-241-80-22242
- * email: info@openwns.org
- * www: http://www.openwns.org
- * _____________________________________________________________________________
- *
- * openWNS is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License version 2 as published by the
- * Free Software Foundation;
- *
- * openWNS is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
- * details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+/******************************************************************************
+ * DLLBase (DLL Base classes to create FUN-based DLL)                         *
+ * __________________________________________________________________________ *
+ *                                                                            *
+ * Copyright (C) 2006                                                         *
+ * Chair of Communication Networks (ComNets)                                  *
+ * Kopernikusstr. 16, D-52074 Aachen, Germany                                 *
+ * phone: ++49-241-80-27910 (phone), fax: ++49-241-80-22242                   *
+ * email: wns@comnets.rwth-aachen.de                                          *
+ * www: http://wns.comnets.rwth-aachen.de                                     *
  ******************************************************************************/
 
 #ifndef DLL_UPPERCONVERGENCE_HPP
@@ -39,12 +24,14 @@
 #include <WNS/logger/Logger.hpp>
 
 #include <WNS/service/dll/DataTransmission.hpp>
+#include <WNS/service/dll/FlowEstablishmentAndRelease.hpp>
 #include <WNS/service/dll/Handler.hpp>
+#include <WNS/service/dll/FlowID.hpp>
+#include <WNS/service/qos/QoSClasses.hpp>
 #include <WNS/pyconfig/View.hpp>
 
 namespace dll {
 	class RANG;
-	class PriorityProvider;
 
 	/** @brief Command contributed by the UpperConvergence FU of the Data
 	 * Link Layer (DLL) */
@@ -59,6 +46,7 @@ namespace dll {
 		}
 
 		struct {
+			wns::service::dll::FlowID dllFlowID;
 		} local;
 		struct {
 			wns::service::dll::UnicastAddress sourceMACAddress;
@@ -86,14 +74,21 @@ namespace dll {
 	{
 	public:
 		UpperConvergence(wns::ldk::fun::FUN* fun, const wns::pyconfig::View& config);
-		virtual ~UpperConvergence() {}
+		virtual ~UpperConvergence();
+
+		virtual void
+		registerFlowHandler(wns::service::dll::FlowHandler*){};
+
+		virtual void
+		registerIRuleControl(wns::service::dll::IRuleControl*){};
 
 		// DataTransmission service
 		virtual void
 		sendData(
 			const wns::service::dll::UnicastAddress& _peer,
 			const wns::osi::PDUPtr& _data,
-			wns::service::dll::protocolNumber protocol);
+			wns::service::dll::protocolNumber protocol,
+			wns::service::dll::FlowID _dllFlowID = 0);
 
 		virtual std::string
 		getSubnetIdentifier() { return "DLLBase";}
@@ -113,8 +108,6 @@ namespace dll {
 	protected:
 		wns::service::dll::UnicastAddress sourceMACAddress;
 		wns::logger::Logger logger;
-	private:
-		dll::PriorityProvider* pp;
 	};
 
 
@@ -123,6 +116,7 @@ namespace dll {
 	class UTUpperConvergence :
 		public UpperConvergence,
 		public wns::ldk::Forwarding<UTUpperConvergence>,
+		public wns::service::dll::FlowEstablishmentAndRelease,
 		public wns::Cloneable<UTUpperConvergence>
 	{
 	public:
@@ -133,7 +127,16 @@ namespace dll {
 		virtual void
 		registerHandler(wns::service::dll::protocolNumber protocol,
 				wns::service::dll::Handler* _dh);
-	private:
+
+		virtual void
+		registerFlowHandler(wns::service::dll::FlowHandler*) {}
+
+		virtual void
+		establishFlow(wns::service::tl::FlowID flowID, wns::service::qos::QoSClass qosClass);
+
+		virtual void
+		releaseFlow(wns::service::tl::FlowID flowID);
+	protected:
 		/**
 		 * @brief Needed for demultiplexing of upper layer protocols.
 		 */
@@ -160,9 +163,13 @@ namespace dll {
 		virtual void
 		registerHandler(wns::service::dll::protocolNumber protocol,
 				wns::service::dll::Handler* _dh);
+
+		virtual void
+		registerFlowHandler(wns::service::dll::FlowHandler*){};
+
 		bool hasRANG();
 		dll::RANG* getRANG();
-	private:
+	protected:
 		RANG* dataHandler;
 	};
 
@@ -187,6 +194,9 @@ namespace dll {
 		{}
 		virtual void
 		registerHandler(wns::service::dll::protocolNumber /*protocol*/, wns::service::dll::Handler* /*_dh*/){};
+
+		virtual void
+		registerFlowHandler(wns::service::dll::FlowHandler*){};
 
 /*		wns::service::dll::UnicastAddress
 		getMACAddress() const { return wns::service::dll::UnicastAddress(); }*/

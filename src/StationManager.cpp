@@ -1,28 +1,13 @@
-/*******************************************************************************
- * This file is part of openWNS (open Wireless Network Simulator)
- * _____________________________________________________________________________
- *
- * Copyright (C) 2004-2007
- * Chair of Communication Networks (ComNets)
- * Kopernikusstr. 5, D-52074 Aachen, Germany
- * phone: ++49-241-80-27910,
- * fax: ++49-241-80-22242
- * email: info@openwns.org
- * www: http://www.openwns.org
- * _____________________________________________________________________________
- *
- * openWNS is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License version 2 as published by the
- * Free Software Foundation;
- *
- * openWNS is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
- * details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+/******************************************************************************
+ * DLLBase (DLL Base classes to create FUN-based DLL)                         *
+ * __________________________________________________________________________ *
+ *                                                                            *
+ * Copyright (C) 2006                                                         *
+ * Chair of Communication Networks (ComNets)                                  *
+ * Kopernikusstr. 16, D-52074 Aachen, Germany                                 *
+ * phone: ++49-241-80-27910 (phone), fax: ++49-241-80-22242                   *
+ * email: wns@comnets.rwth-aachen.de                                          *
+ * www: http://wns.comnets.rwth-aachen.de                                     *
  ******************************************************************************/
 
 #include <DLL/StationManager.hpp>
@@ -48,8 +33,8 @@ StationManager::~StationManager()
 
 void
 StationManager::registerStation(Layer2::StationIDType id,
-								wns::service::dll::UnicastAddress adr,
-								Layer2* layer)
+				wns::service::dll::UnicastAddress adr,
+				Layer2* layer)
 {
 	//assure(! layerLookup.knows(id), "Station already registered.");
 
@@ -100,7 +85,18 @@ StationManager::getNodeByID(Layer2::StationIDType id) const
 Layer2*
 StationManager::getStationByMAC(wns::service::dll::UnicastAddress adr) const
 {
+	assure(adr.getInteger()>0,"getStationByMAC("<<adr<<"): bad address");
 	return macAdrLookup.find(adr);
 }
 
+NodeList
+StationManager::getNodeList() const
+{
+  NodeList nodeList;
+  for(NodeLookup::const_iterator iter = nodeLookup.begin(); iter != nodeLookup.end(); ++iter)
+  {
+    nodeList.push_back(iter->first);
+  }
+  return nodeList;
+}
 

@@ -1,28 +1,13 @@
-/*******************************************************************************
- * This file is part of openWNS (open Wireless Network Simulator)
- * _____________________________________________________________________________
- *
- * Copyright (C) 2004-2007
- * Chair of Communication Networks (ComNets)
- * Kopernikusstr. 5, D-52074 Aachen, Germany
- * phone: ++49-241-80-27910,
- * fax: ++49-241-80-22242
- * email: info@openwns.org
- * www: http://www.openwns.org
- * _____________________________________________________________________________
- *
- * openWNS is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License version 2 as published by the
- * Free Software Foundation;
- *
- * openWNS is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
- * details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+/******************************************************************************
+ * DLLBase (DLL Base classes to create FUN-based DLL)                         *
+ * __________________________________________________________________________ *
+ *                                                                            *
+ * Copyright (C) 2006                                                         *
+ * Chair of Communication Networks (ComNets)                                  *
+ * Kopernikusstr. 16, D-52074 Aachen, Germany                                 *
+ * phone: ++49-241-80-27910 (phone), fax: ++49-241-80-22242                   *
+ * email: wns@comnets.rwth-aachen.de                                          *
+ * www: http://wns.comnets.rwth-aachen.de                                     *
  ******************************************************************************/
 
 #include <DLL/RANG.hpp>
@@ -38,15 +23,14 @@
 using namespace dll;
 
 STATIC_FACTORY_REGISTER_WITH_CREATOR(RANG,
-									 wns::node::component::Interface,
-									 "dll.RANG",
-									 wns::node::component::ConfigCreator);
+				     wns::node::component::Interface,
+				     "dll.RANG",
+				     wns::node::component::ConfigCreator);
 
 RANG::RANG(wns::node::Interface* node, const wns::pyconfig::View& _config) :
 	wns::node::component::Component(node, _config),
-
-	config(_config),
 	accessPointLookup(),
+	config(_config),
 	logger(config.get("logger"))
 {
 } // RANG
@@ -59,7 +43,8 @@ RANG::doStartup()
 }
 
 void
-RANG::onData(const wns::osi::PDUPtr& _data)
+RANG::onData(const wns::osi::PDUPtr& _data,
+			 wns::service::dll::FlowID)
 {
 	assure(dataHandlerRegistry.knows(wns::service::dll::protocolNumberOf(_data)), "no data handler set");
 	dataHandlerRegistry.find(wns::service::dll::protocolNumberOf(_data))->onData(_data);
@@ -68,7 +53,8 @@ RANG::onData(const wns::osi::PDUPtr& _data)
 void
 RANG::onData(const wns::osi::PDUPtr& _data,
 			 wns::service::dll::UnicastAddress _sourceMACAddress,
-			 wns::service::dll::UnicastDataTransmission* _ap)
+			 wns::service::dll::UnicastDataTransmission* _ap,
+			 wns::service::dll::FlowID _dllFlowID)
 {
 	updateAPLookUp(_sourceMACAddress, _ap);
 
@@ -77,14 +63,15 @@ RANG::onData(const wns::osi::PDUPtr& _data,
 	MESSAGE_END();
 
 	assure(dataHandlerRegistry.knows(wns::service::dll::protocolNumberOf(_data)), "no data handler set");
-	dataHandlerRegistry.find(wns::service::dll::protocolNumberOf(_data))->onData(_data);
+	dataHandlerRegistry.find(wns::service::dll::protocolNumberOf(_data))->onData(_data, _dllFlowID);
 }
 
 void
 RANG::sendData(
 	const wns::service::dll::UnicastAddress& _peer,
 	const wns::osi::PDUPtr& pdu,
-	wns::service::dll::protocolNumber protocol)
+	wns::service::dll::protocolNumber protocol,
+	wns::service::dll::FlowID _dllFlowID)
 {
 	wns::service::dll::UnicastDataTransmission* ap = NULL;
 	if( knowsAddress(_peer) )
@@ -102,8 +89,7 @@ RANG::sendData(
 	m << "target is ";
 	m << _peer;
 	MESSAGE_END();
-
-	ap->sendData(_peer, pdu, protocol);
+	ap->sendData(_peer, pdu, protocol, _dllFlowID);
 }
 
 void
@@ -124,7 +110,7 @@ void
 RANG::onWorldCreated()
 {
 	int numAPs = config.len("dllDataTransmissions");
-	assure( numAPs == config.len("dllNotifications"), 
+	assure( numAPs == config.len("dllNotifications"),
 			"mismatch in number of DataTransmission / Notification services");
 	// browse through the list of connected APs
 	for (int i=0; i<numAPs; ++i)
@@ -132,7 +118,7 @@ RANG::onWorldCreated()
 		wns::node::component::FQSN dataTransmission(config.get<wns::pyconfig::View>("dllDataTransmissions",i));
 		wns::node::component::FQSN notification(config.get<wns::pyconfig::View>("dllNotifications",i));
 
-		dll::UpperConvergence* dataTransmissionService = 
+		dll::UpperConvergence* dataTransmissionService =
 			getRemoteService<dll::UpperConvergence*>(dataTransmission);
 		dll::UpperConvergence* notificationService =
 			getRemoteService<dll::UpperConvergence*>(notification);

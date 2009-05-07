@@ -1,28 +1,13 @@
-/*******************************************************************************
- * This file is part of openWNS (open Wireless Network Simulator)
- * _____________________________________________________________________________
- *
- * Copyright (C) 2004-2007
- * Chair of Communication Networks (ComNets)
- * Kopernikusstr. 5, D-52074 Aachen, Germany
- * phone: ++49-241-80-27910,
- * fax: ++49-241-80-22242
- * email: info@openwns.org
- * www: http://www.openwns.org
- * _____________________________________________________________________________
- *
- * openWNS is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License version 2 as published by the
- * Free Software Foundation;
- *
- * openWNS is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
- * details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+/******************************************************************************
+ * DLLBase (DLL Base classes to create FUN-based DLL)                         *
+ * __________________________________________________________________________ *
+ *                                                                            *
+ * Copyright (C) 2006                                                         *
+ * Chair of Communication Networks (ComNets)                                  *
+ * Kopernikusstr. 16, D-52074 Aachen, Germany                                 *
+ * phone: ++49-241-80-27910 (phone), fax: ++49-241-80-22242                   *
+ * email: wns@comnets.rwth-aachen.de                                          *
+ * www: http://wns.comnets.rwth-aachen.de                                     *
  ******************************************************************************/
 
 #ifndef DLL_RANG_HPP
@@ -32,6 +17,7 @@
 
 #include <WNS/service/dll/DataTransmission.hpp>
 #include <WNS/service/dll/Handler.hpp>
+#include <WNS/service/dll/FlowID.hpp>
 #include <WNS/node/component/Component.hpp>
 #include <WNS/container/Registry.hpp>
 
@@ -60,13 +46,20 @@ namespace dll {
 		RANG(wns::node::Interface*, const wns::pyconfig::View&);
 		virtual ~RANG(){};
 
+		virtual void
+		registerFlowHandler(wns::service::dll::FlowHandler*){};
+
+		virtual void
+		registerIRuleControl(wns::service::dll::IRuleControl*){};
+
 		/** @name wns::service::dll::DataTransmission service */
 		//@{
 		virtual void
 		sendData(
 			const wns::service::dll::UnicastAddress& _peer,
 			const wns::osi::PDUPtr& _data,
-			wns::service::dll::protocolNumber protocol);
+			wns::service::dll::protocolNumber protocol,
+			wns::service::dll::FlowID _dllFlowID = wns::service::dll::NoFlowID);
 		//@}
 
 		virtual wns::service::dll::UnicastAddress
@@ -76,14 +69,15 @@ namespace dll {
 		/** @name wns::service::dll::Notification service */
 		//@{
 		virtual void
-		registerHandler(wns::service::dll::protocolNumber protocol, 
+		registerHandler(wns::service::dll::protocolNumber protocol,
 				wns::service::dll::Handler* _dh);
 		//@}
 
 		/** @name wns::service::dll::Handler Interface */
 		//@{
 		/** @brief standard onData method */
-		virtual void onData(const wns::osi::PDUPtr& _data);
+		virtual void onData(const wns::osi::PDUPtr& _data,
+				    wns::service::dll::FlowID _dllFlowID = wns::service::dll::NoFlowID);
 
 		/** @brief Modified Handler Interface for APs.
 		 *
@@ -101,9 +95,11 @@ namespace dll {
 		void removeAddress(wns::service::dll::UnicastAddress _sourceMACAddress,
 		                   wns::service::dll::UnicastDataTransmission* _ap);
 
+		virtual
 		void onData(const wns::osi::PDUPtr& _data,
 				  wns::service::dll::UnicastAddress _sourceMACAddress,
-				  wns::service::dll::UnicastDataTransmission* _ap);
+				  wns::service::dll::UnicastDataTransmission* _ap,
+			          wns::service::dll::FlowID _dllFlowID = wns::service::dll::NoFlowID);
 		//@}
 
 		/** @name wns::node::component::Component Interface */
@@ -116,11 +112,9 @@ namespace dll {
 	protected:
 		virtual void
 		doStartup();
-
-	private:
-		wns::pyconfig::View config;
 		AccessPointLookup accessPointLookup;
 
+	private:
 		/**
 		 * @brief Needed for demultiplexing of upper layer protocols.
 		 */
@@ -131,6 +125,8 @@ namespace dll {
 		 * by the protocol number.
 		 */
 		DataHandlerRegistry dataHandlerRegistry;
+
+		wns::pyconfig::View config;
 
 		wns::logger::Logger logger;
 	};

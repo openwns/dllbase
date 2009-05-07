@@ -85,8 +85,8 @@ FUTestBase::prepare()
 
     pycoL.loadString("from dll.Layer2 import Layer2\n"
 		     "import dll.UpperConvergence\n"
-		     "from openwns.node import Node\n"
-		     "from openwns.FUN import FUN\n"
+		     "from wns.Node import Node\n"
+		     "from wns.FUN import FUN\n"
 
 		     "node  = Node('isi_NodeName')\n"
 		     "layer = Layer2(node,'isi_StationName', None)\n"

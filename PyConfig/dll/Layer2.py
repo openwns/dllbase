@@ -29,8 +29,6 @@ from openwns.pyconfig import attrsetter
 
 import openwns.node
 import openwns.logger
-from  PriorityProvider import PriorityProvider
-
 class LinkHandler:
 
     type = "wns.ldk.SimpleLinkHandler"
@@ -40,7 +38,7 @@ class LinkHandler:
     wakeupLogger = None
     onDataLogger = None
 
-    traceCompoundJourney = True
+    traceCompoundJourney = False
 
     def __init__(self, parentLogger = None):
         self.isAcceptingLogger = openwns.logger.Logger("WNS", "LinkHandler", True, parentLogger)
@@ -75,6 +73,10 @@ class Layer2( openwns.node.Component ):
     dataTransmission = None
     notification = None
 
+    # Services offered to the TL
+    flowHandler = None
+    flowEstablishmentAndRelease = None
+
     # MAC Adress
     address = None
 
@@ -92,9 +94,6 @@ class Layer2( openwns.node.Component ):
     # Name of the UpperConvergence FU
     upperConvergenceName = None
 
-    # Name of the Priority Provider FU
-    priorityProvider = None
-
     #
     # layer2 Constructor
     #
@@ -103,12 +102,15 @@ class Layer2( openwns.node.Component ):
         super(Layer2,self).__init__(node, stationName)
         self.dataTransmission = stationName + ".dllDataTransmission"
         self.notification = stationName + ".dllNotification"
+
+        self.flowHandler = stationName + ".dllFlowHandler"
+        self.flowEstablishmentAndRelease = stationName + ".dllFlowEstablishmentAndRelease"
+
         self.controlServices = []
         self.managementServices = []
         self.logger = openwns.logger.Logger("DLL", "L2", True, parentLogger)
         self.linkHandler = LinkHandler(self.logger)
         self.upperConvergenceName = 'upperConvergence'
-        self.priorityProvider = PriorityProvider()
         attrsetter(self, kw)
 
     def setPhyDataTransmission(self, serviceName):

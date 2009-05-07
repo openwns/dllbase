@@ -36,6 +36,7 @@
 #include <WNS/logger/Logger.hpp>
 #include <WNS/node/Interface.hpp>
 #include <WNS/ldk/PyConfigCreator.hpp>
+#include <WNS/service/phy/power/PowerMeasurement.hpp>
 
 namespace wns {
 	namespace ldk {
@@ -190,13 +191,28 @@ namespace dll { namespace services { namespace management {
 		};
 
 		/**
+		 * @brief Store the received power measurements of node in the InterferenceCache.
+		 *
+		 * The received power values of node is stored in the
+		 * InterferenceCache. The ValueOrigin tells whether the local node
+		 * or a remote node writes into the cache.
+		 *
+		 * @sa storeCarrier()
+		 * @sa storeInterference()
+		 * @sa storePathloss()
+		 */
+		void storeMeasurements( wns::node::Interface* node, wns::service::phy::power::PowerMeasurementPtr rxPowerMeasurement, ValueOrigin origin, int subBand = 0);
+
+		/**
 		 * @brief Store the received carrier power of node in the InterferenceCache.
 		 *
 		 * The received carrier power of node is stored in the
 		 * InterferenceCache. The ValueOrigin tells whether the local node
 		 * or a remote node writes into the cache.
 		 *
-		 * @sa storeInterference()
+		 * Obsolete for new code. But still used in unitTests. Therefore not removed.
+		 *
+		 * @sa storeMeasurements()
 		 */
 		void storeCarrier( wns::node::Interface* node, const wns::Power& carrier, ValueOrigin origin, int subBand = 0);
 
@@ -208,12 +224,17 @@ namespace dll { namespace services { namespace management {
 		 * InterferenceCache. The ValueOrigin tells whether the local node
 		 * or a remote node writes into the cache.
 		 *
-		 * @sa storeCarrier()
+		 * Obsolete for new code. But still used in unitTests. Therefore not removed.
+		 *
+		 * @sa storeMeasurements()
 		 */
 		void storeInterference( wns::node::Interface* node, const wns::Power& interference, ValueOrigin origin, int subBand = 0);
 
 		/**
 		 * @brief Store the estimated pathloss (including antenna gains) to a node in the InterferenceCache.
+		 *
+		 * Obsolete for new code. But still used in unitTests. Therefore not removed.
+		 * @sa storeMeasurements()
 		 */
 		void storePathloss( wns::node::Interface* node, const wns::Ratio& pathloss, ValueOrigin origin, int subBand = 0);
 

@@ -65,7 +65,6 @@ void InterferenceCacheTest::writeData()
 {
 	InterferenceCache* iCache =
 		layer_->getManagementService<InterferenceCache>("interferenceCache");
-
 	wns::node::Interface* nodeStub = new wns::node::tests::Stub();
 	iCache->storeCarrier( nodeStub, wns::Power::from_dBm( -30.0 ), InterferenceCache::Local );
 	iCache->storeCarrier( nodeStub, wns::Power::from_dBm( -40.0 ), InterferenceCache::Local );
