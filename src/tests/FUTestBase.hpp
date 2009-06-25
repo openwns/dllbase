@@ -163,7 +163,7 @@ namespace dll { namespace tests {
     dll::StationManager* stationManager;
     dll::NoUpperConvergence* upperConvergence;
     wns::node::tests::Stub* node;
-    dll::Layer2* layer;
+    dll::ILayer2* layer;
     wns::ldk::fun::Main* fun;
 
     wns::ldk::tools::StubBase* upperStub;

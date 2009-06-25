@@ -42,8 +42,8 @@
 
 using namespace dll;
 
-Layer2::StationIDType Layer2::invalidStationID = -1;
-Layer2::StationIDType Layer2::broadcastStationID = -2;
+ILayer2::StationIDType ILayer2::invalidStationID = -1;
+ILayer2::StationIDType ILayer2::broadcastStationID = -2;
 
 Layer2::Layer2(wns::node::Interface* _node, const wns::pyconfig::View& _config, StationManager* _sm) :
 	wns::node::component::Component(_node, _config),

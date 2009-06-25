@@ -41,10 +41,10 @@ namespace dll { namespace tests {
 	 * This LayerStub will automatically create a node::tests::Stub
 	 */
 	class LayerStub :
-		public dll::Layer2
+		public dll::ILayer2
 	{
 	public:
-		LayerStub(wns::node::Interface*, const wns::pyconfig::View&, StationManager*);
+		LayerStub();
 
 		virtual
 		~LayerStub();
@@ -61,11 +61,64 @@ namespace dll { namespace tests {
 
 		virtual std::string getNodeName() const;
 
+                virtual wns::ldk::ControlServiceRegistry*
+                getCSR() { assure(false, "Not implemented"); }
+
+                virtual void
+                addControlService(const std::string& name, wns::ldk::ControlServiceInterface* csi) {}
+
+                virtual wns::ldk::ManagementServiceRegistry*
+                getMSR() { assure(false, "Not implemented"); }
+
+                virtual void
+                addManagementService(const std::string& name, wns::ldk::ManagementServiceInterface* msi) {}
+
+                virtual wns::ldk::ManagementServiceInterface*
+            findManagementService(std::string) const { assure(false, "Not implemented");}
+
+                virtual wns::ldk::ControlServiceInterface*
+            findControlServiceInterface(std::string) const {assure(false, "Not implemented");}
+
+                /** @brief Access to the internal ID */
+                virtual StationIDType
+                getID() const {return ILayer2::invalidStationID;}
+
+                /** @brief Access to the DLL Address */
+                virtual wns::service::dll::UnicastAddress
+                getDLLAddress() const { return wns::service::dll::UnicastAddress(); }
+
+                /** @brief Access to the StationManager */
+                virtual StationManager*
+                getStationManager() { assure(false, "Not implemented");}
+
+                /** @brief Access the stationType */
+                virtual StationType
+                getStationType() const { assure(false, "Not implemented");}
+
+                /** @brief Access the internal FUN */
+                virtual wns::ldk::fun::FUN*
+            getFUN() const;
+
+                virtual void
+                addAssociationInfoProvider( const std::string& id, dll::services::control::AssociationInfo* provider ) { assure(false, "Not implemented");}
+
+                virtual const AssociationInfoContainer&
+            getAssociationInfoProvider(const std::string& id) const;
+
+                virtual void
+                updateContext(const std::string& key, int value) { assure(false, "Not implemented");}
+
+                virtual void
+                setContext(const std::string& key, int value) { assure(false, "Not implemented");}
 	private:
 		virtual void
 		doStartup();
 
-		wns::node::Interface* node;
+		wns::node::Interface* node_;
+        
+        wns::ldk::fun::FUN* fun_;
+        
+        AssociationInfoContainer aic_; 
 	};
 } // tests
 } // dll

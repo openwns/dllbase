@@ -32,9 +32,9 @@ StationManager::~StationManager()
 } // ~StationManager
 
 void
-StationManager::registerStation(Layer2::StationIDType id,
+StationManager::registerStation(ILayer2::StationIDType id,
 				wns::service::dll::UnicastAddress adr,
-				Layer2* layer)
+				ILayer2* layer)
 {
 	//assure(! layerLookup.knows(id), "Station already registered.");
 
@@ -44,7 +44,7 @@ StationManager::registerStation(Layer2::StationIDType id,
 	if (layerLookup.knows(id))
 	{
 		// id is already known -> station has more than one address
-		assure(this->getStationByID(id) == layer, "A station with id " << id << " is already registered using a differend Layer2*");
+		assure(this->getStationByID(id) == layer, "A station with id " << id << " is already registered using a differend ILayer2*");
 	}
 	else
 	{
@@ -53,7 +53,7 @@ StationManager::registerStation(Layer2::StationIDType id,
 
 	if(nodeLookup.knows(layer->getNode()))
 	{
-		assure(this->getStationByNode(layer->getNode()) == layer, "A station with this node is already registered using a different Layer2*");
+		assure(this->getStationByNode(layer->getNode()) == layer, "A station with this node is already registered using a different ILayer2*");
 	}
 	else
 	{
@@ -62,13 +62,13 @@ StationManager::registerStation(Layer2::StationIDType id,
 } // registerStation
 
 
-Layer2*
-StationManager::getStationByID(Layer2::StationIDType id) const
+ILayer2*
+StationManager::getStationByID(ILayer2::StationIDType id) const
 {
 	return layerLookup.find(id);
 } // getStationByID
 
-Layer2*
+ILayer2*
 StationManager::getStationByNode(wns::node::Interface* node) const
 {
 	return nodeLookup.find(node);
@@ -76,13 +76,13 @@ StationManager::getStationByNode(wns::node::Interface* node) const
 
 
 wns::node::Interface*
-StationManager::getNodeByID(Layer2::StationIDType id) const
+StationManager::getNodeByID(ILayer2::StationIDType id) const
 {
 	return this->getStationByID(id)->getNode();
 } // getStationByID
 
 
-Layer2*
+ILayer2*
 StationManager::getStationByMAC(wns::service::dll::UnicastAddress adr) const
 {
 	assure(adr.getInteger()>0,"getStationByMAC("<<adr<<"): bad address");

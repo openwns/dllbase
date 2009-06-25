@@ -39,7 +39,7 @@
 #include <list>
 
 namespace dll {
-	class Layer2;
+	class ILayer2;
 	class StationManager;
 }
 namespace dll {	namespace services { namespace control {
@@ -95,7 +95,7 @@ namespace dll {	namespace services { namespace control {
 		Association( wns::ldk::ControlServiceRegistry* csr, const wns::pyconfig::View& config);
 		virtual ~Association(){}
 
-		/** @name Methods to query about associations between dll::Layer2 Instances */
+		/** @name Methods to query about associations between dll::ILayer2 Instances */
 		//@{
 		/** @brief return this stations association (master station) */
 		wns::service::dll::UnicastAddress
@@ -117,16 +117,16 @@ namespace dll {	namespace services { namespace control {
 		/** @brief set association between source and a "master station" -- address version*/
  		void
 		associate(wns::service::dll::UnicastAddress slave, wns::service::dll::UnicastAddress master);
-		/** @brief set association between source and a "master station" -- Layer2* version*/
+		/** @brief set association between source and a "master station" -- ILayer2* version*/
  		void
-		associate(dll::Layer2* slave, dll::Layer2* master);
+		associate(dll::ILayer2* slave, dll::ILayer2* master);
 		/** @brief release association to my "master station" */
 		void
 		releaseFromMaster();
 
-		/** @brief release association of a slave station -- Layer2* version*/
+		/** @brief release association of a slave station -- ILayer2* version*/
  		void
-		releaseClient(dll::Layer2*);
+		releaseClient(dll::ILayer2*);
 		/** @brief release association of a slave station -- address version*/
  		void
 		releaseClient(wns::service::dll::UnicastAddress slave);
@@ -153,7 +153,7 @@ namespace dll {	namespace services { namespace control {
 		/** @brief Logger for debug output */
 		wns::logger::Logger logger_;
 
-		/** @brief Access to station manager for DLL->Layer2* */
+		/** @brief Access to station manager for DLL->ILayer2* */
 		dll::StationManager* stationManager_;
 	};
 }

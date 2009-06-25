@@ -101,9 +101,8 @@ FUTestBase::prepare()
 		    );
     wns::pyconfig::View lView(pycoL, "layer");
 
-    layer = new dll::tests::LayerStub(node, lView, stationManager);
-    fun = dynamic_cast<wns::ldk::fun::Main*>(layer->getFUN());
-    assure(fun, "Error casting wns::ldk::fun::FUN* to wns::ldk::fun::Main*");
+    layer = new dll::tests::LayerStub();
+    fun = new wns::ldk::fun::Main(layer);
 
     upperStub = newUpperStub();
     lowerStub = newLowerStub();
