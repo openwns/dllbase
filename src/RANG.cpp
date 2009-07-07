@@ -31,6 +31,7 @@ RANG::RANG(wns::node::Interface* node, const wns::pyconfig::View& _config) :
 	wns::node::component::Component(node, _config),
 	accessPointLookup(),
 	config(_config),
+    learnAPfromIncomingData((config.knows("learnAPfromIncomingData") ? config.get<bool>("learnAPfromIncomingData") : true)),
 	logger(config.get("logger"))
 {
 } // RANG
@@ -56,7 +57,10 @@ RANG::onData(const wns::osi::PDUPtr& _data,
 			 wns::service::dll::UnicastDataTransmission* _ap,
 			 wns::service::dll::FlowID _dllFlowID)
 {
-	updateAPLookUp(_sourceMACAddress, _ap);
+    if(learnAPfromIncomingData)
+    {
+        updateAPLookUp(_sourceMACAddress, _ap);
+    }
 
 	MESSAGE_BEGIN(NORMAL, logger, m,"Receiving incoming data from MAC Address: ");
 	m << _sourceMACAddress;

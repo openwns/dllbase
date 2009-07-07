@@ -128,6 +128,8 @@ namespace dll {
 
 		wns::pyconfig::View config;
 
+        bool learnAPfromIncomingData;
+
 		wns::logger::Logger logger;
 	};
 }
