@@ -45,31 +45,84 @@ namespace dll {
 	class StationManager;
 	class UpperConvergence;
 
+        class ILayer2:
+            virtual public wns::ldk::ILayer
+        {
+        public:
+            typedef int32_t StationIDType;
+
+            /** @brief Corresponding with the StationTypes ENUM */
+            typedef int32_t StationType;
+
+            typedef std::vector<dll::services::control::AssociationInfo*> AssociationInfoContainer;
+
+            typedef wns::container::Registry< std::string, AssociationInfoContainer > AssociationInfoRegistry;
+
+            static StationIDType   invalidStationID;
+            static StationIDType broadcastStationID;
+
+            /** @brief Access to the internal ID */
+            virtual StationIDType
+            getID() const = 0;
+
+            /** @brief Access to the DLL Address */
+            virtual wns::service::dll::UnicastAddress
+            getDLLAddress() const = 0;
+
+            /** @brief Access to the StationManager */
+            virtual StationManager*
+            getStationManager() = 0;
+
+            /** @brief Access the stationType */
+            virtual StationType
+            getStationType() const = 0;
+
+            /** @brief Access the internal FUN */
+            virtual wns::ldk::fun::FUN*
+            getFUN() const = 0;
+
+           /**
+            * @brief Access the Station Name. This method is deprecated - it is
+            * recommended to use the  node's getName() instead
+            */
+            virtual std::string
+            getName() const = 0;
+
+           /** @brief Deliver pointer to the Node this component belongs to */
+            virtual wns::node::Interface*
+            getNode() const = 0;
+
+            virtual void
+            addAssociationInfoProvider( const std::string& id, dll::services::control::AssociationInfo* provider ) = 0;
+
+            virtual const AssociationInfoContainer&
+            getAssociationInfoProvider(const std::string& id) const = 0;
+
+            virtual void
+            updateContext(const std::string& key, int value) = 0;
+
+            virtual void
+            setContext(const std::string& key, int value) = 0;
+        };
+
 	/** @brief The DLL Component Base Class.
 	 *
 	 * Inherited by the WinProSt and WiMAC Data Link Layers. This class is
 	 * mainly the container for the Functional Unit Network (FUN).
 	 */
 	class Layer2 :
-		   public wns::ldk::Layer,
-		   public wns::node::component::Component
+            public ILayer2,
+            public wns::ldk::Layer,
+            public wns::node::component::Component
 	{
 	public:
-		typedef std::vector<dll::services::control::AssociationInfo*> AssociationInfoContainer;
-		typedef wns::container::Registry< std::string, AssociationInfoContainer > AssociationInfoRegistry;
-		typedef int32_t StationIDType;
-		/** @brief Corresponding with the StationTypes ENUM */
-		typedef int32_t StationType;
-
-		static StationIDType   invalidStationID;
-		static StationIDType broadcastStationID;
 
 		/** @brief Constructor */
 		Layer2(wns::node::Interface*, const wns::pyconfig::View&, StationManager* sm);
 		/** @brief Destructor */
 		virtual ~Layer2();
 
-		/** @brief Access to the internal ID */
+                /** @brief Access to the internal ID */
 		StationIDType getID() const;
 
 		/** @brief Access to the DLL Address */

@@ -38,7 +38,7 @@
 
 namespace dll { 
 
-class Layer2;
+class ILayer2;
 
 namespace services { namespace management { namespace tests {
 
