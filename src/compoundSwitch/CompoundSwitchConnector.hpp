@@ -50,7 +50,7 @@ namespace dll { namespace compoundSwitch {
 		public wns::ldk::Connector
 	{
 	public:
-		typedef std::vector<wns::ldk::FunctionalUnit*> FunctionalUnitContainer;
+		typedef std::vector<wns::ldk::IConnectorReceptacle*> FunctionalUnitContainer;
 		typedef std::list<IFilter*> Filters;
 
 		//~CompoundSwitchConnector();
@@ -60,14 +60,14 @@ namespace dll { namespace compoundSwitch {
 		IFilter* getFilter(const wns::ldk::CompoundPtr& compound) const;
 		Filters getAllFilter() const;
 
-		virtual void add(wns::ldk::FunctionalUnit* fu);
+		virtual void add(wns::ldk::IConnectorReceptacle* fu);
 		virtual void clear();
 		virtual uint32_t size() const;
-		virtual const wns::ldk::Link::ExchangeContainer get() const;
-		virtual void set(const wns::ldk::Link::ExchangeContainer&);
+            virtual const wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer get() const;
+            virtual void set(const wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer&);
 
 		virtual bool hasAcceptor(const wns::ldk::CompoundPtr& compound);
-		virtual wns::ldk::FunctionalUnit* getAcceptor(const wns::ldk::CompoundPtr& compound);
+		virtual wns::ldk::IConnectorReceptacle* getAcceptor(const wns::ldk::CompoundPtr& compound);
 
 	private:
 		FunctionalUnitContainer fus;

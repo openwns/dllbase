@@ -101,7 +101,7 @@ CompoundSwitchDeliverer::getAllFilter() const
 } // getAllFilter()
 
 void
-CompoundSwitchDeliverer::add(wns::ldk::FunctionalUnit* fu)
+CompoundSwitchDeliverer::add(wns::ldk::IDelivererReceptacle* fu)
 {
 	fus.push_back(fu);
 } // add
@@ -119,12 +119,12 @@ CompoundSwitchDeliverer::size() const
 	return fus.size();
 } // size
 
-const wns::ldk::Link::ExchangeContainer
+const wns::ldk::Link<wns::ldk::IDelivererReceptacle>::ExchangeContainer
 CompoundSwitchDeliverer::get() const
 {
-	Link::ExchangeContainer result;
+    wns::ldk::Link<wns::ldk::IDelivererReceptacle>::ExchangeContainer result;
 
-	for(Link::ExchangeContainer::const_iterator it = fus.begin();
+    for(wns::ldk::Link<wns::ldk::IDelivererReceptacle>::ExchangeContainer::const_iterator it = fus.begin();
 		it != fus.end();
 		++it) {
 		result.push_back(*it);
@@ -135,11 +135,11 @@ CompoundSwitchDeliverer::get() const
 
 
 void
-CompoundSwitchDeliverer::set(const wns::ldk::Link::ExchangeContainer& src)
+CompoundSwitchDeliverer::set(const wns::ldk::Link<wns::ldk::IDelivererReceptacle>::ExchangeContainer& src)
 {
 	fus.clear();
 
-	for(Link::ExchangeContainer::const_iterator it = src.begin();
+        for(wns::ldk::Link<wns::ldk::IDelivererReceptacle>::ExchangeContainer::const_iterator it = src.begin();
 		it != src.end();
 		++it) {
 		fus.push_back(*it);
@@ -148,7 +148,7 @@ CompoundSwitchDeliverer::set(const wns::ldk::Link::ExchangeContainer& src)
 
 
 
-wns::ldk::FunctionalUnit*
+wns::ldk::IDelivererReceptacle*
 CompoundSwitchDeliverer::getAcceptor(const wns::ldk::CompoundPtr& compound)
 {
 	int i = 0;

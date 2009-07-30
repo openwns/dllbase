@@ -104,7 +104,7 @@ CompoundSwitchConnector::getAllFilter() const
 } //getAllFilter()
 
 void
-CompoundSwitchConnector::add(wns::ldk::FunctionalUnit* fu)
+CompoundSwitchConnector::add(wns::ldk::IConnectorReceptacle* fu)
 {
 	fus.push_back(fu);
 } // add
@@ -121,12 +121,12 @@ CompoundSwitchConnector::size() const
 	return fus.size();
 } // size
 
-const wns::ldk::Link::ExchangeContainer
+const wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer
 CompoundSwitchConnector::get() const
 {
-	Link::ExchangeContainer result;
+    wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer result;
 
-	for(Link::ExchangeContainer::const_iterator it = fus.begin();
+    for(wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer::const_iterator it = fus.begin();
 		it != fus.end();
 		++it) {
 		result.push_back(*it);
@@ -136,11 +136,11 @@ CompoundSwitchConnector::get() const
 } // get
 
 void
-CompoundSwitchConnector::set(const Link::ExchangeContainer& src)
+CompoundSwitchConnector::set(const wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer& src)
 {
 	fus.clear();
 
-	for(Link::ExchangeContainer::const_iterator it = src.begin();
+        for(wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer::const_iterator it = src.begin();
 		it != src.end();
 		++it) {
 		fus.push_back(*it);
@@ -171,7 +171,7 @@ CompoundSwitchConnector::hasAcceptor(const wns::ldk::CompoundPtr& compound)
 	return false;
 }
 
-wns::ldk::FunctionalUnit*
+wns::ldk::IConnectorReceptacle*
 CompoundSwitchConnector::getAcceptor(const wns::ldk::CompoundPtr& compound)
 {
 	int i = 0;
