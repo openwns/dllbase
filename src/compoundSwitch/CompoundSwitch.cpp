@@ -136,7 +136,7 @@ CompoundSwitch::printFilterAssociation()
     // onData
 	MESSAGE_SINGLE(NORMAL, logger_, "onData association:   [ Filter -> Functional Unit ]");
 
-	wns::ldk::Link::ExchangeContainer fus = getDeliverer()->get();
+        wns::ldk::Link<wns::ldk::IDelivererReceptacle>::ExchangeContainer fus = getDeliverer()->get();
 	CompoundSwitchDeliverer::Filters filters = getDeliverer()->getAllFilter();
 
 	if ( filters.size() != fus.size() ) {
@@ -148,32 +148,32 @@ CompoundSwitch::printFilterAssociation()
 	}
 
 	CompoundSwitchDeliverer::Filters::iterator itFilter = filters.begin();
-	for(wns::ldk::Link::ExchangeContainer::const_iterator itFU = fus.begin();
+	for(wns::ldk::Link<wns::ldk::IDelivererReceptacle>::ExchangeContainer::const_iterator itFU = fus.begin();
 		itFU != fus.end();++itFU)
 	{
-		MESSAGE_SINGLE(NORMAL, logger_, (*itFilter)->getName() << " -> " << (*itFU)->getName());
+            MESSAGE_SINGLE(NORMAL, logger_, (*itFilter)->getName() << " -> " << (*itFU)->getFU()->getName());
 		++itFilter;
 	}
 
     //sendData
 	MESSAGE_SINGLE(NORMAL, logger_,"sendData association: [ Filter, Functional Unit ]");
 
-	fus = getConnector()->get();
+	wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer cons = getConnector()->get();
 	filters = getConnector()->getAllFilter();
 
-	if ( filters.size() != fus.size() ) {
+	if ( filters.size() != cons.size() ) {
 		std::stringstream ss;
 		ss << "Configuration Error" << std::endl
 		   << "Number of sendData Filters mismatch number of lower FUs in Compound Switch" << std::endl
-		   << "Number of sendData Filters: " << filters.size() << " Number of lower FUs: " << fus.size() << std::endl;
+		   << "Number of sendData Filters: " << filters.size() << " Number of lower FUs: " << cons.size() << std::endl;
 		throw wns::Exception(ss.str());
 	}
 
 	itFilter = filters.begin();
-	for(wns::ldk::Link::ExchangeContainer::const_iterator itFU = fus.begin();
-		itFU != fus.end();++itFU)
+	for(wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer::const_iterator itFU = cons.begin();
+		itFU != cons.end();++itFU)
 	{
-		MESSAGE_SINGLE(NORMAL, logger_, (*itFilter)->getName() << " -> " <<(*itFU)->getName());
+		MESSAGE_SINGLE(NORMAL, logger_, (*itFilter)->getName() << " -> " <<(*itFU)->getFU()->getName());
 		++itFilter;
 	}
 
