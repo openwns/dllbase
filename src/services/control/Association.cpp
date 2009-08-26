@@ -119,14 +119,14 @@ Association::associate(wns::service::dll::UnicastAddress slave, wns::service::dl
 	// 2. Register the association at the master's association service
 	// first obtain pointer to my peer service at the master's side
 	dll::services::control::Association* peerService =
-		this->csr_->getLayer<dll::Layer2*>()->getStationManager()->getStationByMAC(master)
+		this->csr_->getLayer<dll::ILayer2*>()->getStationManager()->getStationByMAC(master)
 		->getControlService<dll::services::control::Association>(serviceName_);
 	// then register the association
 	peerService->registerAssociation(slave, master);
 }
 
 void
-Association::associate(dll::Layer2* slave, dll::Layer2* master)
+Association::associate(dll::ILayer2* slave, dll::ILayer2* master)
 {
 	this->associate(slave->getDLLAddress(), master->getDLLAddress());
 } //associate
@@ -153,7 +153,7 @@ Association::releaseClient(wns::service::dll::UnicastAddress slave)
 	slaveStations_.remove(slave);
 }
 void
-Association::releaseClient(dll::Layer2* slave)
+Association::releaseClient(dll::ILayer2* slave)
 {
 	this->releaseClient(slave->getDLLAddress());
 } //releaseFromMaster

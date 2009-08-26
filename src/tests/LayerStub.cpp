@@ -31,10 +31,10 @@
 using namespace dll::tests;
 
 
-LayerStub::LayerStub(wns::node::Interface* _node, const wns::pyconfig::View& _config, StationManager* _sm = NULL )
-	: dll::Layer2::Layer2(_node, _config, _sm ),
-	  node(_node)
+LayerStub::LayerStub()
 {
+    fun_ = new wns::ldk::fun::Main(this);
+    node_ = new wns::node::tests::Stub();
 }
 
 void
@@ -44,6 +44,8 @@ LayerStub::doStartup()
 
 LayerStub::~LayerStub()
 {
+    delete fun_;
+    delete node_;
 }
 
 std::string
@@ -55,7 +57,13 @@ LayerStub::getName() const
 wns::node::Interface*
 LayerStub::getNode() const
 {
-	return node;
+	return node_;
+}
+
+wns::ldk::fun::FUN*
+LayerStub::getFUN() const
+{
+    return fun_;
 }
 
 void
@@ -79,4 +87,8 @@ LayerStub::getNodeName() const
 	return std::string("None");
 }
 
-
+const dll::ILayer2::AssociationInfoContainer&
+LayerStub::getAssociationInfoProvider(const std::string& id) const
+{
+    return aic_;
+}

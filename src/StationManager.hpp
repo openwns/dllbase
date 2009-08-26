@@ -58,9 +58,9 @@ namespace dll {
 	 */
 	class StationManager
 	{
-		typedef wns::container::Registry<Layer2::StationIDType, Layer2*> LayerLookup;
-		typedef wns::container::Registry<wns::node::Interface*, Layer2*> NodeLookup;
-		typedef wns::container::Registry<wns::service::dll::UnicastAddress, Layer2*> MACAdrLookup;
+		typedef wns::container::Registry<ILayer2::StationIDType, ILayer2*> LayerLookup;
+		typedef wns::container::Registry<wns::node::Interface*, ILayer2*> NodeLookup;
+		typedef wns::container::Registry<wns::service::dll::UnicastAddress, ILayer2*> MACAdrLookup;
 
 	public:
 		/** @brief Constructor */
@@ -69,14 +69,14 @@ namespace dll {
 		virtual ~StationManager();
 
 		/** @brief to register a station (Layer2) after its creation */
-		void registerStation(Layer2::StationIDType id, wns::service::dll::UnicastAddress adr, Layer2* layer);
+		void registerStation(ILayer2::StationIDType id, wns::service::dll::UnicastAddress adr, ILayer2* layer);
 
 		/** @name Lookup methods */
 		//@{
-		Layer2* getStationByMAC(wns::service::dll::UnicastAddress mac) const;
-		Layer2* getStationByID(Layer2::StationIDType) const;
-		Layer2* getStationByNode(wns::node::Interface*) const;
-		wns::node::Interface* getNodeByID(Layer2::StationIDType) const;
+		ILayer2* getStationByMAC(wns::service::dll::UnicastAddress mac) const;
+		ILayer2* getStationByID(ILayer2::StationIDType) const;
+		ILayer2* getStationByNode(wns::node::Interface*) const;
+		wns::node::Interface* getNodeByID(ILayer2::StationIDType) const;
 		NodeList getNodeList() const;
 		//@}
 
