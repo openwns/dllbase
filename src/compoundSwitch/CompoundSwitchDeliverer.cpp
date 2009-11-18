@@ -113,7 +113,7 @@ CompoundSwitchDeliverer::clear()
 } // clear
 
 
-uint32_t
+size_t
 CompoundSwitchDeliverer::size() const
 {
 	return fus.size();

@@ -115,7 +115,7 @@ CompoundSwitchConnector::clear()
 	fus.clear();
 } // clear
 
-uint32_t
+size_t
 CompoundSwitchConnector::size() const
 {
 	return fus.size();
