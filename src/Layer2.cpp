@@ -54,7 +54,7 @@ Layer2::Layer2(wns::node::Interface* _node, const wns::pyconfig::View& _config, 
 	stationID(config.get<StationIDType>("stationID")),
 	type(wns::service::dll::StationTypes::fromString(config.get<std::string>("stationType"))),
 	address(config.get<wns::service::dll::UnicastAddress>("address")),
-	ring(config.get<uint32_t>("ring")),
+	ring(config.get<unsigned long int>("ring")),
 	air(),
 	agent()
 {

@@ -49,10 +49,10 @@ namespace dll {
             virtual public wns::ldk::ILayer
         {
         public:
-            typedef int32_t StationIDType;
+            typedef long int StationIDType;
 
             /** @brief Corresponding with the StationTypes ENUM */
-            typedef int32_t StationType;
+            typedef long int StationType;
 
             typedef std::vector<dll::services::control::AssociationInfo*> AssociationInfoContainer;
 
@@ -204,7 +204,7 @@ namespace dll {
 		 *
 		 * @todo should use Enum.
 		 */
-		uint32_t ring;
+		unsigned long int ring;
 
 		/** @brief */
 		AssociationInfoRegistry air;

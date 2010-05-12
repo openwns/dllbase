@@ -63,7 +63,7 @@ namespace dll { namespace compoundSwitch {
 
 		virtual void add(wns::ldk::IDelivererReceptacle* fu);
 		virtual void clear();
-		virtual uint32_t size() const;
+		virtual unsigned long int size() const;
             virtual const wns::ldk::Link<wns::ldk::IDelivererReceptacle>::ExchangeContainer get() const;
             virtual void set(const wns::ldk::Link<wns::ldk::IDelivererReceptacle>::ExchangeContainer&);
 
