@@ -26,7 +26,12 @@
  ******************************************************************************/
 
 #include <DLL/services/management/InterferenceCache.hpp>
+#include <DLL/Layer2.hpp>
+#include <DLL/StationManager.hpp>
+
 #include <WNS/node/Interface.hpp>
+#include <WNS/service/dll/StationTypes.hpp>
+
 #include <cmath>
 
 
@@ -64,6 +69,8 @@ InterferenceCache::InterferenceCache( wns::ldk::ManagementServiceRegistry* msr, 
 	: wns::ldk::ManagementService( msr ),
 	  alphaLocal_(config.get<double>("alphaLocal")),
 	  alphaRemote_(config.get<double>("alphaRemote")),
+      initialized_(false),
+      serviceName_(config.get<std::string>("serviceName")),
 	  logger(config.get("logger"))
 {
 
@@ -82,7 +89,7 @@ void InterferenceCache::storeMeasurements( wns::node::Interface* node, wns::serv
 {
 	wns::Power carrier = rxPowerMeasurement->getRxPower();
 	wns::Power interference = rxPowerMeasurement->getOmniInterferencePower();
-	wns::Ratio pathloss = rxPowerMeasurement->getPathLoss();
+	wns::Ratio pathloss = rxPowerMeasurement->getLoss();
 	InterferenceCacheKey key(node, subBand);
 	double alpha;
 	if (origin == Local)
@@ -253,6 +260,53 @@ wns::Ratio InterferenceCache::getAveragedPathloss( wns::node::Interface* node, i
 		return notFoundStrategy->notFoundAveragePathloss();
 
 	return wns::Ratio::from_factor(itpl->second);
+}
+
+wns::Ratio 
+InterferenceCache::getAverageEmittedInterferencePathloss(wns::node::Interface* node) const
+{
+    dll::Layer2* layer = getMSR()->getLayer<dll::Layer2*>();
+    
+    if(layer->getStationType() != wns::service::dll::StationTypes::AP())
+        return wns::Ratio();
+
+    if(initialized_ && remoteBSCaches_.size() == 0)
+        return wns::Ratio();
+
+    if(!initialized_)
+    {
+        initialized_ = true;
+        dll::NodeList nl = layer->getStationManager()->getNodeList();
+
+        dll::NodeList::iterator it;
+        for(it = nl.begin(); it != nl.end(); it++)
+        {
+            /* Only include APs*/
+            dll::ILayer2* aLayer = layer->getStationManager()->getStationByNode(*it);
+            if(aLayer->getStationType() == wns::service::dll::StationTypes::AP())
+            {
+                /* Do not include us */
+                if(*it != layer->getNode())
+                {
+                    remoteBSCaches_.push_back(
+                        aLayer->getManagementService<dll::services::management::InterferenceCache>(serviceName_));
+                }
+            }
+        }
+    }
+
+    std::list<InterferenceCache*>::iterator iter;
+    double sum = 0;
+    //std::cout << "DEBUG: " << node->getName();
+    for(iter = remoteBSCaches_.begin(); iter != remoteBSCaches_.end(); iter++)
+    {
+        //std::cout <<  (*iter)->getAveragedPathloss(node) << "+";
+        sum += 1.0 / (*iter)->getAveragedPathloss(node).get_factor();
+    }
+    //std::cout <<  "=" << wns::Ratio::from_factor(1.0 / sum) << "\n";
+    wns::Ratio result = wns::Ratio::from_factor(1.0 / sum);
+
+    return result;
 }
 
 wns::Power InterferenceCache::getCarrierDeviation( wns::node::Interface* node, int subBand ) const

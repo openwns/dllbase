@@ -247,6 +247,12 @@ namespace dll { namespace services { namespace management {
 		/// Returns the average pathloss measured so far.
 		wns::Ratio getAveragedPathloss( wns::node::Interface* node, int subBand = 0 ) const;
 
+        /**
+        * @brief Get the average uplink interference pathloss from this node to all but this BS
+        */
+        wns::Ratio 
+        getAverageEmittedInterferencePathloss(wns::node::Interface* node) const;
+
 		/// Returns the deviation of the measured carrier power.
 		wns::Power getCarrierDeviation( wns::node::Interface*, int subBand = 0 ) const;
 
@@ -288,6 +294,9 @@ namespace dll { namespace services { namespace management {
 		Node2Double node2pathloss;
 		double alphaLocal_;
 		double alphaRemote_;
+        mutable bool initialized_;
+        mutable std::list<InterferenceCache*> remoteBSCaches_;
+        std::string serviceName_;
 
 		wns::logger::Logger logger;
 
