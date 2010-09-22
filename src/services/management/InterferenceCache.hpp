@@ -29,6 +29,7 @@
 #define DLL_SERVICES_MANAGEMENT_INTERFERENCECACHE_HPP
 
 #include <map>
+#include <set>
 #include <WNS/ldk/ldk.hpp>
 #include <WNS/PowerRatio.hpp>
 #include <WNS/pyconfig/View.hpp>
@@ -185,6 +186,9 @@ namespace dll { namespace services { namespace management {
 
 		virtual ~InterferenceCache(){}
 
+        virtual void
+        onMSRCreated();
+
 		enum ValueOrigin {
 			Local,
 			Remote
@@ -247,6 +251,14 @@ namespace dll { namespace services { namespace management {
 		/// Returns the average pathloss measured so far.
 		wns::Ratio getAveragedPathloss( wns::node::Interface* node, int subBand = 0 ) const;
 
+		/// Returns the average carrier power measured so far on all subchannels the node transmitted on.
+		wns::Power getPerSCAveragedCarrier( wns::node::Interface* node) const;
+
+		/// Returns the average interference measured so far on all subchannels the node transmitted on.
+		wns::Power getPerSCAveragedInterference( wns::node::Interface* node) const;
+
+		/// Returns the average pathloss measured so far on all subchannels the node transmitted on.
+		wns::Ratio getPerSCAveragedPathloss( wns::node::Interface* node) const;
         /**
         * @brief Get the average uplink interference pathloss from this node to all but this BS
         */
@@ -296,6 +308,7 @@ namespace dll { namespace services { namespace management {
 		double alphaRemote_;
         mutable bool initialized_;
         mutable std::list<InterferenceCache*> remoteBSCaches_;
+        std::map<int, std::set<int> > userSubbands_;
         std::string serviceName_;
 
 		wns::logger::Logger logger;

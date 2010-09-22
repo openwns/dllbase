@@ -31,6 +31,7 @@
 
 #include <WNS/node/Interface.hpp>
 #include <WNS/service/dll/StationTypes.hpp>
+#include <WNS/Average.hpp>
 
 #include <cmath>
 
@@ -87,6 +88,8 @@ InterferenceCache::InterferenceCache( wns::ldk::ManagementServiceRegistry* msr, 
 
 void InterferenceCache::storeMeasurements( wns::node::Interface* node, wns::service::phy::power::PowerMeasurementPtr rxPowerMeasurement, ValueOrigin origin, int subBand )
 {
+    userSubbands_[node->getNodeID()].insert(subBand);
+
 	wns::Power carrier = rxPowerMeasurement->getRxPower();
 	wns::Power interference = rxPowerMeasurement->getOmniInterferencePower();
 	wns::Ratio pathloss = rxPowerMeasurement->getLoss();
@@ -230,13 +233,13 @@ void InterferenceCache::storePathloss( wns::node::Interface* node, const wns::Ra
 
 wns::Power InterferenceCache::getAveragedCarrier( wns::node::Interface* node, int subBand ) const
 {
-	InterferenceCacheKey key(node, subBand);
+    InterferenceCacheKey key(node, subBand);
 
 	Node2Power::const_iterator it = node2CarrierAverage_.find( key );
 	if ( it == node2CarrierAverage_.end() )
 		return notFoundStrategy->notFoundAverageCarrier();
-	MESSAGE_SINGLE(VERBOSE,logger,"Getting C for " << node->getName() <<": " << it->second );
-	return it->second;
+    MESSAGE_SINGLE(VERBOSE,logger,"Getting C for " << node->getName() <<": " << it->second );
+    return it->second;
 }
 
 wns::Power InterferenceCache::getAveragedInterference( wns::node::Interface* node, int subBand ) const
@@ -246,7 +249,7 @@ wns::Power InterferenceCache::getAveragedInterference( wns::node::Interface* nod
 	Node2Power::const_iterator it = node2InterferenceAverage_.find( key );
 	if ( it == node2InterferenceAverage_.end() )
 		return notFoundStrategy->notFoundAverageInterference();
-	MESSAGE_SINGLE(VERBOSE,logger,"Getting I for " << node->getName() <<": " << it->second );
+    MESSAGE_SINGLE(VERBOSE,logger,"Getting I for " << node->getName() <<": " << it->second );
 	return it->second;
 }
 
@@ -260,6 +263,77 @@ wns::Ratio InterferenceCache::getAveragedPathloss( wns::node::Interface* node, i
 		return notFoundStrategy->notFoundAveragePathloss();
 
 	return wns::Ratio::from_factor(itpl->second);
+}
+
+wns::Power InterferenceCache::getPerSCAveragedCarrier( wns::node::Interface* node) const
+{
+    if (userSubbands_.find(node->getNodeID()) == userSubbands_.end())
+    {
+        MESSAGE_SINGLE(NORMAL,logger,"No average carrier known for " << node->getName());
+        return notFoundStrategy->notFoundAverageCarrier();
+    }
+
+    std::set<int> subBands = userSubbands_.find(node->getNodeID())->second;
+    std::set<int>::iterator it;
+    wns::Average<double> mean;
+    for(it = subBands.begin(); it != subBands.end(); it++)
+    {
+        InterferenceCacheKey key(node, *it);
+        assure(node2CarrierAverage_.find(key) != node2CarrierAverage_.end(), "No average interference found.");
+        mean.put(node2CarrierAverage_.find(key)->second.get_mW());
+    }
+    MESSAGE_SINGLE(NORMAL,logger,"Getting C for " << node->getName() <<": " << wns::Power::from_mW(mean.get())
+         << " average over " << subBands.size() << " resources.");
+
+	return wns::Power::from_mW(mean.get());
+}
+
+wns::Power InterferenceCache::getPerSCAveragedInterference( wns::node::Interface* node) const
+{
+    if (userSubbands_.find(node->getNodeID()) == userSubbands_.end())
+    {
+        MESSAGE_SINGLE(NORMAL,logger,"No average interference known for " << node->getName());
+        return notFoundStrategy->notFoundAverageInterference();
+    }
+
+    std::set<int> subBands = userSubbands_.find(node->getNodeID())->second;
+    std::set<int>::iterator it;
+    wns::Average<double> mean;
+    for(it = subBands.begin(); it != subBands.end(); it++)
+    {
+        InterferenceCacheKey key(node, *it);
+        assure(node2InterferenceAverage_.find(key) != node2InterferenceAverage_.end(), "No average interference found.");
+        mean.put(node2InterferenceAverage_.find(key)->second.get_mW());
+    }
+    MESSAGE_SINGLE(NORMAL,logger,"Getting I for " << node->getName() <<": " << wns::Power::from_mW(mean.get())
+         << " average over " << subBands.size() << " resources.");
+
+    return wns::Power::from_mW(mean.get());
+
+}
+
+wns::Ratio InterferenceCache::getPerSCAveragedPathloss( wns::node::Interface* node) const
+{
+    if (userSubbands_.find(node->getNodeID()) == userSubbands_.end())
+    {
+        MESSAGE_SINGLE(NORMAL,logger,"No average pathloss known for " << node->getName());
+        return notFoundStrategy->notFoundAveragePathloss();
+    }
+
+    std::set<int> subBands = userSubbands_.find(node->getNodeID())->second;
+    std::set<int>::iterator it;
+    wns::Average<double> mean;
+    for(it = subBands.begin(); it != subBands.end(); it++)
+    {
+        InterferenceCacheKey key(node, *it);
+        assure(node2pathloss.find(key) != node2pathloss.end(), "No average pathloss found.");
+        mean.put(node2pathloss.find(key)->second);
+    }
+    MESSAGE_SINGLE(NORMAL,logger,"Getting PL for " << node->getName() <<": " << wns::Ratio::from_factor(mean.get())
+         << " average over " << subBands.size() << " resources.");
+
+    return wns::Ratio::from_factor(mean.get());
+
 }
 
 wns::Ratio 
@@ -297,16 +371,18 @@ InterferenceCache::getAverageEmittedInterferencePathloss(wns::node::Interface* n
 
     std::list<InterferenceCache*>::iterator iter;
     double sum = 0;
-    //std::cout << "DEBUG: " << node->getName();
     for(iter = remoteBSCaches_.begin(); iter != remoteBSCaches_.end(); iter++)
     {
-        //std::cout <<  (*iter)->getAveragedPathloss(node) << "+";
         sum += 1.0 / (*iter)->getAveragedPathloss(node).get_factor();
     }
-    //std::cout <<  "=" << wns::Ratio::from_factor(1.0 / sum) << "\n";
     wns::Ratio result = wns::Ratio::from_factor(1.0 / sum);
 
     return result;
+}
+
+void
+InterferenceCache::onMSRCreated()
+{
 }
 
 wns::Power InterferenceCache::getCarrierDeviation( wns::node::Interface* node, int subBand ) const
