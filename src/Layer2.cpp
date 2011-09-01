@@ -206,4 +206,10 @@ Layer2::ContextAgent::doVisit(wns::probe::bus::IContext& context) const
 }
 
 
+void
+Layer2::onShutdown()
+{
+    fun->onShutdown();
+} 
+
 

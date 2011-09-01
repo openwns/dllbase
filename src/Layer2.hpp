@@ -168,6 +168,8 @@ namespace dll {
 				agent.setContext(key, value);
 			}
 
+                virtual void onShutdown();
+
 	protected:
 		Layer2(const Layer2&);	// disallow copy constructor
 		Layer2& operator=(const Layer2&); // disallow assignment
