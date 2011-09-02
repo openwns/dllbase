@@ -47,13 +47,36 @@ class InterferenceCache(Service):
     notFoundStrategy = None
     logger = None
 
-    def __init__(self, serviceName, alphaLocal, alphaRemote, parent = None):
+    def __init__(self, serviceName, alphaLocal, alphaRemote, esm, parent = None):
         self.serviceName = serviceName
         self.alphaLocal = alphaLocal
         self.alphaRemote = alphaRemote
         self.logger = openwns.logger.Logger("DLL", self.serviceName, True, parent)
         self.notFoundStrategy = ConstantValue()
+        self.esmFunc = esm
 
+class ESMFunc(object):
+    __plugin__ = None
+
+    def __init__(self, phyModeMapper):
+        self.phyModeMapper = phyModeMapper
+
+class ESMStub(ESMFunc):
+    __plugin__ = 'dll.services.management.InterferenceCache.ESMStub'
+
+class LinearESM(ESMFunc):
+    __plugin__ = 'dll.services.management.InterferenceCache.LinearESM'
+
+class LogESM(ESMFunc):
+    __plugin__ = 'dll.services.management.InterferenceCache.LogESM'
+
+class MIESM(ESMFunc):
+    __plugin__ = 'dll.services.management.InterferenceCache.MIESM'
+
+    def __init__(self, phyModeMapper, maxBLER = 0.1, blockSize = 300):
+        ESMFunc.__init__(self, phyModeMapper)
+        self.maxBLER = maxBLER
+        self.blockSize = blockSize
 
 class ConstantValue(object):
     __plugin__ = 'dll.services.management.InterferenceCache.ConstantValue'

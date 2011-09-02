@@ -9,6 +9,7 @@ srcFiles = [
     # Services
     'src/services/control/Association.cpp',
     'src/services/management/InterferenceCache.cpp',
+    'src/services/management/ESMFunc.cpp',
 
     # compoundFilter
     'src/compoundSwitch/CompoundSwitch.cpp',
@@ -43,6 +44,7 @@ hppFiles = [
 'src/RANG.hpp',
 'src/services/control/Association.hpp',
 'src/services/management/InterferenceCache.hpp',
+'src/services/management/ESMFunc.hpp',
 'src/services/management/tests/InterferenceCacheTest.hpp',
 'src/StationManager.hpp',
 'src/tests/FUTestBase.hpp',

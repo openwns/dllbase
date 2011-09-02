@@ -81,6 +81,11 @@ InterferenceCache::InterferenceCache( wns::ldk::ManagementServiceRegistry* msr, 
 		(wns::StaticFactory< wns::ldk::PyConfigCreator<dll::services::management::InterferenceCache::NotFoundStrategy> >
 		 ::creator(notFoundView.get<std::string>("__plugin__"))->create(notFoundView));
 
+	wns::pyconfig::View esmFuncView(config, "esmFunc");
+    esmFunc_ = IESMFuncFactory::creator(
+        esmFuncView.get<std::string>("__plugin__"))->create(esmFuncView);
+
+
 	MESSAGE_SINGLE(NORMAL, logger, "Created InterferenceCache Service");
 
 
@@ -379,6 +384,30 @@ InterferenceCache::getAverageEmittedInterferencePathloss(wns::node::Interface* n
 
     return result;
 }
+
+wns::Ratio
+InterferenceCache::getEffectiveSINR(wns::node::Interface* node, 
+    const std::set<unsigned int>& subchannels,
+    const wns::Power& txPower,
+    const std::map<unsigned int, wns::Power>& interferences)
+{
+    std::set<unsigned int>::const_iterator it;
+    std::set<wns::Ratio> sinrs;
+
+    for(it = subchannels.begin(); it != subchannels.end(); it++)
+    {
+        wns::Power i;
+        if(interferences.find(*it) != interferences.end())
+            i = interferences.at(*it);
+        else
+            getAveragedInterference(node, *it);
+        wns::Ratio pl = getAveragedPathloss(node, *it);
+        wns::Ratio sinr = txPower / (i * pl);
+        sinrs.insert(sinr);
+    }
+    
+    return (*esmFunc_)(sinrs); 
+}                                    
 
 void
 InterferenceCache::onMSRCreated()

@@ -28,6 +28,8 @@
 #ifndef DLL_SERVICES_MANAGEMENT_INTERFERENCECACHE_HPP
 #define DLL_SERVICES_MANAGEMENT_INTERFERENCECACHE_HPP
 
+#include <DLL/services/management/ESMFunc.hpp>
+
 #include <map>
 #include <set>
 #include <WNS/ldk/ldk.hpp>
@@ -265,6 +267,16 @@ namespace dll { namespace services { namespace management {
         wns::Ratio 
         getAverageEmittedInterferencePathloss(wns::node::Interface* node) const;
 
+        /**
+        * @brief Calculate Effective SINR using an Effective SINR Mapping (ESM).
+        * if no interference map is provided values from the local cache are used
+        */
+        wns::Ratio
+        getEffectiveSINR(wns::node::Interface* node, 
+            const std::set<unsigned int>& subchannels,
+            const wns::Power& txPower,
+            const std::map<unsigned int, wns::Power>& interferences = std::map<unsigned int, wns::Power>());
+
 		/// Returns the deviation of the measured carrier power.
 		wns::Power getCarrierDeviation( wns::node::Interface*, int subBand = 0 ) const;
 
@@ -314,6 +326,7 @@ namespace dll { namespace services { namespace management {
 		wns::logger::Logger logger;
 
 		std::auto_ptr<NotFoundStrategy> notFoundStrategy;
+        IESMFunc* esmFunc_;
 	};
 }}}
 #endif // NOT DEFINED DLL_SERVICES_MANAGEMENT_INTERFERENCECACHE_HPP

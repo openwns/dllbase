@@ -48,7 +48,8 @@ void InterferenceCacheTest::setUp()
 	wns::pyconfig::Parser config;
 	config.loadString(
 	  "import dll.Services\n"
-	  "interferenceCache = dll.Services.InterferenceCache( \"interferenceCache\", 0.2, 0.05)\n"
+      "esm = dll.Services.ESMStub(None)\n"
+	  "interferenceCache = dll.Services.InterferenceCache( \"interferenceCache\", 0.2, 0.05, esm = esm)\n"
 	  "interferenceCache.notFoundStrategy.averageCarrier = \"-96.0 dBm\"\n"
 	  "interferenceCache.notFoundStrategy.averageInterference = \"-88.0 dBm\"\n"
 	  "interferenceCache.notFoundStrategy.deviationCarrier = \"0.0 mW\"\n"
