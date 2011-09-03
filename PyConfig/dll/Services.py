@@ -73,10 +73,8 @@ class LogESM(ESMFunc):
 class MIESM(ESMFunc):
     __plugin__ = 'dll.services.management.InterferenceCache.MIESM'
 
-    def __init__(self, phyModeMapper, maxBLER = 0.1, blockSize = 300):
+    def __init__(self, phyModeMapper):
         ESMFunc.__init__(self, phyModeMapper)
-        self.maxBLER = maxBLER
-        self.blockSize = blockSize
 
 class ConstantValue(object):
     __plugin__ = 'dll.services.management.InterferenceCache.ConstantValue'

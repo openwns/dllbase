@@ -392,7 +392,14 @@ InterferenceCache::getEffectiveSINR(wns::node::Interface* node,
     const std::map<unsigned int, wns::Power>& interferences)
 {
     std::set<unsigned int>::const_iterator it;
-    std::set<wns::Ratio> sinrs;
+    std::list<wns::Ratio> sinrs;
+
+    /* 
+    We get an estimation for sure when using "PerSC" 
+    but it could be outdated. Alternatively use getAveragedPathloss 
+    in the loop but ignore uninitialized pathloss entries 
+    */
+    wns::Ratio pl = getPerSCAveragedPathloss(node);
 
     for(it = subchannels.begin(); it != subchannels.end(); it++)
     {
@@ -401,10 +408,12 @@ InterferenceCache::getEffectiveSINR(wns::node::Interface* node,
             i = interferences.at(*it);
         else
             getAveragedInterference(node, *it);
-        wns::Ratio pl = getAveragedPathloss(node, *it);
+//        pl = getAveragedPathloss(node, *it);
         wns::Ratio sinr = txPower / (i * pl);
-        sinrs.insert(sinr);
+        sinrs.push_back(sinr);
     }
+
+    std::list<wns::Ratio>::iterator iter;
     
     return (*esmFunc_)(sinrs); 
 }                                    

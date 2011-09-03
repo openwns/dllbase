@@ -64,7 +64,7 @@ ESMStub::ESMStub(const wns::pyconfig::View&)
 }
 
 wns::Ratio
-ESMStub::operator()(const std::set<wns::Ratio>&)
+ESMStub::operator()(const std::list<wns::Ratio>&)
 {
     return wns::Ratio::from_factor(1);
 }
@@ -76,9 +76,9 @@ LinearESM::LinearESM(const wns::pyconfig::View& config):
 }
 
 wns::Ratio
-LinearESM::operator()(const std::set<wns::Ratio>& sinrs)
+LinearESM::operator()(const std::list<wns::Ratio>& sinrs)
 {
-    std::set<wns::Ratio>::const_iterator it;
+    std::list<wns::Ratio>::const_iterator it;
     double sum = 0;
     for(it = sinrs.begin(); it != sinrs.end(); it++)
         sum += it->get_factor();
@@ -92,9 +92,9 @@ LogESM::LogESM(const wns::pyconfig::View& config):
 }
 
 wns::Ratio
-LogESM::operator()(const std::set<wns::Ratio>& sinrs)
+LogESM::operator()(const std::list<wns::Ratio>& sinrs)
 {
-    std::set<wns::Ratio>::const_iterator it;
+    std::list<wns::Ratio>::const_iterator it;
     double sum = 0;
     for(it = sinrs.begin(); it != sinrs.end(); it++)
         sum += it->get_dB();
@@ -103,32 +103,42 @@ LogESM::operator()(const std::set<wns::Ratio>& sinrs)
 }
 
 MIESM::MIESM(const wns::pyconfig::View& config):
-    ESMFunc(config),
-    maxBLER_(config.get<double>("maxBLER")),
-    blockSize_(config.get<int>("blockSize"))
-{
-}
-
-wns::Ratio
-MIESM::operator()(const std::set<wns::Ratio>& sinrs)
+    ESMFunc(config)
 {
     assure(pmm_ != NULL, "Need access to PhyModeMapper");
     std::vector<wns::service::phy::phymode::PhyModeInterfacePtr> pmVec;
 	pmVec =	pmm_->getListOfPhyModePtr();
 
-    for(int i = pmVec.size() - 1; i >= 0; i++)
+    for(int i = 0; i < pmVec.size(); i++)
+        phyModePerModulation_[pmVec[i]->getModulation()] = pmVec[i];
+}
+
+wns::Ratio
+MIESM::operator()(const std::list<wns::Ratio>& sinrs)
+{
+    ModMap::iterator iter;
+
+    unsigned int bestModulation = 0;
+    double bestMib = 0;
+
+    for(iter = phyModePerModulation_.begin();
+        iter != phyModePerModulation_.end();
+        iter++)
     {
-        std::set<wns::Ratio>::const_iterator it;   
+        std::list<wns::Ratio>::const_iterator it;   
         double sumMiB = 0.0;
         for(it = sinrs.begin(); it != sinrs.end(); it++)
         {
-            sumMiB += pmVec[i]->getSINR2MIB(*it);
+            sumMiB += iter->second->getSINR2MIB(*it);
         }
         double mib = sumMiB / double(sinrs.size());
-        if(pmVec[i]->getMI2PER(mib, blockSize_) < maxBLER_)
-            return wns::Ratio::from_factor(pmm_->getMinSINR(pmVec[i])); 
+        if(mib >= bestMib)
+        {
+            bestMib = mib;
+            bestModulation = iter->first;
+        }
     }
 
-    return wns::Ratio::from_factor(pmm_->getMinimumSINR());
+    return phyModePerModulation_[bestModulation]->getMIB2SINR(bestMib);
 }
 

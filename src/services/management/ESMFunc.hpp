@@ -48,7 +48,7 @@ namespace dll { namespace services { namespace management {
 	{
 	public:
         virtual wns::Ratio
-        operator()(const std::set<wns::Ratio>&) = 0;
+        operator()(const std::list<wns::Ratio>&) = 0;
 	};
 
 	typedef wns::ldk::PyConfigCreator<IESMFunc> IESMFuncCreator;
@@ -71,7 +71,7 @@ namespace dll { namespace services { namespace management {
         ESMStub(const wns::pyconfig::View&);
 
         virtual wns::Ratio
-        operator()(const std::set<wns::Ratio>&);
+        operator()(const std::list<wns::Ratio>&);
     };
 
     class LinearESM :
@@ -81,7 +81,7 @@ namespace dll { namespace services { namespace management {
         LinearESM(const wns::pyconfig::View&);
 
         virtual wns::Ratio
-        operator()(const std::set<wns::Ratio>&);
+        operator()(const std::list<wns::Ratio>&);
 
     };
 
@@ -92,7 +92,7 @@ namespace dll { namespace services { namespace management {
         LogESM(const wns::pyconfig::View&);
 
         virtual wns::Ratio
-        operator()(const std::set<wns::Ratio>&);
+        operator()(const std::list<wns::Ratio>&);
 
     };
 
@@ -103,11 +103,13 @@ namespace dll { namespace services { namespace management {
         MIESM(const wns::pyconfig::View&);
 
         virtual wns::Ratio
-        operator()(const std::set<wns::Ratio>&);
+        operator()(const std::list<wns::Ratio>&);
 
     private:
-        double maxBLER_;
-        unsigned int blockSize_;
+        typedef std::map<unsigned int, 
+            wns::service::phy::phymode::PhyModeInterfacePtr> ModMap;
+
+        ModMap phyModePerModulation_;
     };
                     
 
