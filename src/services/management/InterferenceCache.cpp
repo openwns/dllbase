@@ -394,13 +394,6 @@ InterferenceCache::getEffectiveSINR(wns::node::Interface* node,
     std::set<unsigned int>::const_iterator it;
     std::list<wns::Ratio> sinrs;
 
-    /* 
-    We get an estimation for sure when using "PerSC" 
-    but it could be outdated. Alternatively use getAveragedPathloss 
-    in the loop but ignore uninitialized pathloss entries 
-    */
-    wns::Ratio pl = getPerSCAveragedPathloss(node);
-
     for(it = subchannels.begin(); it != subchannels.end(); it++)
     {
         wns::Power i;
@@ -408,7 +401,11 @@ InterferenceCache::getEffectiveSINR(wns::node::Interface* node,
             i = interferences.at(*it);
         else
             getAveragedInterference(node, *it);
-//        pl = getAveragedPathloss(node, *it);
+
+        /*TODO We should use "wideband" PL estimation if 
+        no per SC is available for some or all SCs*/
+        wns::Ratio pl = getAveragedPathloss(node, *it);
+
         wns::Ratio sinr = txPower / (i * pl);
         sinrs.push_back(sinr);
     }
