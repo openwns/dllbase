@@ -93,6 +93,7 @@ class InterferenceCacheDropin(InterferenceCache):
     def __init__(self):
         super(InterferenceCacheDropin,self).__init__(serviceName = "INTERFERENCECACHE",
                                                      alphaLocal  = 0.2,
-                                                     alphaRemote = 0.05)
+                                                     alphaRemote = 0.05,
+                                                     esm = ESMStub(None))
         self.notFoundStrategy = Complain()
 
