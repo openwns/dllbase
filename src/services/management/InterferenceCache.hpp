@@ -275,7 +275,7 @@ namespace dll { namespace services { namespace management {
         getEffectiveSINR(wns::node::Interface* node, 
             const std::set<unsigned int>& subchannels,
             const wns::Power& txPower,
-            const std::map<unsigned int, wns::Power>& interferences = std::map<unsigned int, wns::Power>());
+            const std::map<unsigned int, wns::Power>&);
 
 		/// Returns the deviation of the measured carrier power.
 		wns::Power getCarrierDeviation( wns::node::Interface*, int subBand = 0 ) const;
