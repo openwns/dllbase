@@ -91,7 +91,9 @@ InterferenceCache::InterferenceCache( wns::ldk::ManagementServiceRegistry* msr, 
 
 }
 
-void InterferenceCache::storeMeasurements( wns::node::Interface* node, wns::service::phy::power::PowerMeasurementPtr rxPowerMeasurement, ValueOrigin origin, int subBand )
+void InterferenceCache::storeMeasurements( wns::node::Interface* node, 
+    wns::service::phy::power::PowerMeasurementPtr rxPowerMeasurement, 
+    ValueOrigin origin, int subBand)
 {
     userSubbands_[node->getNodeID()].insert(subBand);
 
@@ -183,9 +185,10 @@ void InterferenceCache::storeCarrier( wns::node::Interface* node, const wns::Pow
 	MESSAGE_END();
 }
 
-void InterferenceCache::storeInterference( wns::node::Interface* node, const wns::Power& interference, ValueOrigin origin, int subBand )
+void InterferenceCache::storeInterference( wns::node::Interface* node, 
+    const wns::Power& interference, ValueOrigin origin, int subBand, int timeSlot )
 {
-	InterferenceCacheKey key(node, subBand);
+	InterferenceCacheKey key(node, subBand, timeSlot);
 
 	double alpha;
 	if (origin == Local)
@@ -236,9 +239,9 @@ void InterferenceCache::storePathloss( wns::node::Interface* node, const wns::Ra
 	MESSAGE_END();
 }
 
-wns::Power InterferenceCache::getAveragedCarrier( wns::node::Interface* node, int subBand ) const
+wns::Power InterferenceCache::getAveragedCarrier( wns::node::Interface* node, int subBand, int timeSlot ) const
 {
-    InterferenceCacheKey key(node, subBand);
+    InterferenceCacheKey key(node, subBand, timeSlot);
 
 	Node2Power::const_iterator it = node2CarrierAverage_.find( key );
 	if ( it == node2CarrierAverage_.end() )
@@ -247,9 +250,9 @@ wns::Power InterferenceCache::getAveragedCarrier( wns::node::Interface* node, in
     return it->second;
 }
 
-wns::Power InterferenceCache::getAveragedInterference( wns::node::Interface* node, int subBand ) const
+wns::Power InterferenceCache::getAveragedInterference( wns::node::Interface* node, int subBand, int timeSlot ) const
 {
-	InterferenceCacheKey key(node, subBand);
+	InterferenceCacheKey key(node, subBand, timeSlot);
 
 	Node2Power::const_iterator it = node2InterferenceAverage_.find( key );
 	if ( it == node2InterferenceAverage_.end() )
@@ -258,9 +261,9 @@ wns::Power InterferenceCache::getAveragedInterference( wns::node::Interface* nod
 	return it->second;
 }
 
-wns::Ratio InterferenceCache::getAveragedPathloss( wns::node::Interface* node, int subBand ) const
+wns::Ratio InterferenceCache::getAveragedPathloss( wns::node::Interface* node, int subBand, int timeSlot ) const
 {
-	InterferenceCacheKey key(node, subBand);
+	InterferenceCacheKey key(node, subBand, timeSlot);
 
 	Node2Double::const_iterator itpl = node2pathloss.find(key);
 

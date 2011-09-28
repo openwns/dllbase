@@ -40,6 +40,7 @@
 #include <WNS/node/Interface.hpp>
 #include <WNS/ldk/PyConfigCreator.hpp>
 #include <WNS/service/phy/power/PowerMeasurement.hpp>
+#include <WNS/scheduler/SchedulerTypes.hpp>
 
 namespace wns {
 	namespace ldk {
@@ -207,7 +208,9 @@ namespace dll { namespace services { namespace management {
 		 * @sa storeInterference()
 		 * @sa storePathloss()
 		 */
-		void storeMeasurements( wns::node::Interface* node, wns::service::phy::power::PowerMeasurementPtr rxPowerMeasurement, ValueOrigin origin, int subBand = 0);
+		void storeMeasurements( wns::node::Interface* node, 
+            wns::service::phy::power::PowerMeasurementPtr rxPowerMeasurement, ValueOrigin origin, 
+            int subBand = 0);
 
 		/**
 		 * @brief Store the received carrier power of node in the InterferenceCache.
@@ -234,7 +237,8 @@ namespace dll { namespace services { namespace management {
 		 *
 		 * @sa storeMeasurements()
 		 */
-		void storeInterference( wns::node::Interface* node, const wns::Power& interference, ValueOrigin origin, int subBand = 0);
+		void storeInterference( wns::node::Interface* node, 
+            const wns::Power& interference, ValueOrigin origin, int subBand = 0, int timeSlot = ANYTIME);
 
 		/**
 		 * @brief Store the estimated pathloss (including antenna gains) to a node in the InterferenceCache.
@@ -245,13 +249,13 @@ namespace dll { namespace services { namespace management {
 		void storePathloss( wns::node::Interface* node, const wns::Ratio& pathloss, ValueOrigin origin, int subBand = 0);
 
 		/// Returns the average carrier power measured so far.
-		wns::Power getAveragedCarrier( wns::node::Interface* node, int subBand = 0 ) const;
+		wns::Power getAveragedCarrier( wns::node::Interface* node, int subBand = 0, int timeSlot = ANYTIME ) const;
 
 		/// Returns the average interference measured so far.
-		wns::Power getAveragedInterference( wns::node::Interface* node, int subBand = 0 ) const;
+		wns::Power getAveragedInterference( wns::node::Interface* node, int subBand = 0, int timeSlot = ANYTIME ) const;
 
 		/// Returns the average pathloss measured so far.
-		wns::Ratio getAveragedPathloss( wns::node::Interface* node, int subBand = 0 ) const;
+		wns::Ratio getAveragedPathloss( wns::node::Interface* node, int subBand = 0, int timeSlot = ANYTIME ) const;
 
 		/// Returns the average carrier power measured so far on all subchannels the node transmitted on.
 		wns::Power getPerSCAveragedCarrier( wns::node::Interface* node) const;
@@ -292,20 +296,26 @@ namespace dll { namespace services { namespace management {
 			public std::binary_function<const InterferenceCacheKey, const InterferenceCacheKey, bool>
 		{
 		public:
-			InterferenceCacheKey(wns::node::Interface* node, int subBand) :
+			InterferenceCacheKey(wns::node::Interface* node, int subBand, int timeSlot = ANYTIME) :
 				node_(node),
-				subBand_(subBand)
+				subBand_(subBand),
+                timeSlot_(timeSlot)
 			{}
 
 			bool operator<(const InterferenceCacheKey& rhs) const
 			{
 				if ( node_->getNodeID() == rhs.node_->getNodeID() )
+                {
+                    if(subBand_ == rhs.subBand_)
+                        return timeSlot_ < rhs.timeSlot_;
 					return subBand_ < rhs.subBand_;
+                }
 				return node_->getNodeID() < rhs.node_->getNodeID();
 			}
 		private:
 			wns::node::Interface* node_;
 			int subBand_;
+            int timeSlot_;
 		};
 
 		typedef std::map<InterferenceCacheKey, wns::Power> Node2Power;
