@@ -280,6 +280,12 @@ namespace dll { namespace services { namespace management {
             const std::set<unsigned int>& subchannels,
             const wns::Power& txPower,
             const std::map<unsigned int, wns::Power>&);
+        
+        /**
+        * @brief Updates the evaluated subchannels of a user.
+        */    
+        void 
+        updateUserSubchannels (const wns::node::Interface* node, const std::set<int>& channels);
 
 		/// Returns the deviation of the measured carrier power.
 		wns::Power getCarrierDeviation( wns::node::Interface*, int subBand = 0 ) const;

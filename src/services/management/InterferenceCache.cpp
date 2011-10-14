@@ -388,6 +388,27 @@ InterferenceCache::getAverageEmittedInterferencePathloss(wns::node::Interface* n
     return result;
 }
 
+void 
+InterferenceCache::updateUserSubchannels (const wns::node::Interface* node, 
+                                          const std::set<int>& channels)
+{
+  if (userSubbands_.find(node->getNodeID()) == userSubbands_.end())
+  {
+      return;
+  }
+  
+  std::set<int>& set1 = userSubbands_[node->getNodeID()];
+  std::set<int> set2;
+  
+  std::set_intersection(set1.begin(), set1.end(), channels.begin(), channels.end(), std::inserter(set2, set2.end()));
+  
+  set1.swap(set2);
+  
+}
+
+
+
+
 wns::Ratio
 InterferenceCache::getEffectiveSINR(wns::node::Interface* node, 
     const std::set<unsigned int>& subchannels,
