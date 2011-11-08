@@ -275,7 +275,8 @@ wns::Ratio InterferenceCache::getAveragedPathloss( wns::node::Interface* node, i
 
 wns::Power InterferenceCache::getPerSCAveragedCarrier( wns::node::Interface* node) const
 {
-    if (userSubbands_.find(node->getNodeID()) == userSubbands_.end())
+    if (userSubbands_.find(node->getNodeID()) == userSubbands_.end() || 
+      userSubbands_.find(node->getNodeID())->second.empty())
     {
         MESSAGE_SINGLE(NORMAL,logger,"No average carrier known for " << node->getName());
         return notFoundStrategy->notFoundAverageCarrier();
@@ -290,6 +291,7 @@ wns::Power InterferenceCache::getPerSCAveragedCarrier( wns::node::Interface* nod
         assure(node2CarrierAverage_.find(key) != node2CarrierAverage_.end(), "No average interference found.");
         mean.put(node2CarrierAverage_.find(key)->second.get_mW());
     }
+    
     MESSAGE_SINGLE(NORMAL,logger,"Getting C for " << node->getName() <<": " << wns::Power::from_mW(mean.get())
          << " average over " << subBands.size() << " resources.");
 
@@ -298,7 +300,8 @@ wns::Power InterferenceCache::getPerSCAveragedCarrier( wns::node::Interface* nod
 
 wns::Power InterferenceCache::getPerSCAveragedInterference( wns::node::Interface* node) const
 {
-    if (userSubbands_.find(node->getNodeID()) == userSubbands_.end())
+    if (userSubbands_.find(node->getNodeID()) == userSubbands_.end() || 
+      userSubbands_.find(node->getNodeID())->second.empty())
     {
         MESSAGE_SINGLE(NORMAL,logger,"No average interference known for " << node->getName());
         return notFoundStrategy->notFoundAverageInterference();
@@ -313,6 +316,7 @@ wns::Power InterferenceCache::getPerSCAveragedInterference( wns::node::Interface
         assure(node2InterferenceAverage_.find(key) != node2InterferenceAverage_.end(), "No average interference found.");
         mean.put(node2InterferenceAverage_.find(key)->second.get_mW());
     }
+    
     MESSAGE_SINGLE(NORMAL,logger,"Getting I for " << node->getName() <<": " << wns::Power::from_mW(mean.get())
          << " average over " << subBands.size() << " resources.");
 
@@ -322,7 +326,8 @@ wns::Power InterferenceCache::getPerSCAveragedInterference( wns::node::Interface
 
 wns::Ratio InterferenceCache::getPerSCAveragedPathloss( wns::node::Interface* node) const
 {
-    if (userSubbands_.find(node->getNodeID()) == userSubbands_.end())
+    if (userSubbands_.find(node->getNodeID()) == userSubbands_.end() || 
+      userSubbands_.find(node->getNodeID())->second.empty())
     {
         MESSAGE_SINGLE(NORMAL,logger,"No average pathloss known for " << node->getName());
         return notFoundStrategy->notFoundAveragePathloss();
@@ -337,7 +342,8 @@ wns::Ratio InterferenceCache::getPerSCAveragedPathloss( wns::node::Interface* no
         assure(node2pathloss.find(key) != node2pathloss.end(), "No average pathloss found.");
         mean.put(node2pathloss.find(key)->second);
     }
-    MESSAGE_SINGLE(NORMAL,logger,"Getting PL for " << node->getName() <<": " << wns::Ratio::from_factor(mean.get())
+
+    MESSAGE_SINGLE(NORMAL,logger,"Getting PL for " << node->getName() <<": " << wns::Ratio::from_factor(mean.get())<<" Mean: "<<mean.get()
          << " average over " << subBands.size() << " resources.");
 
     return wns::Ratio::from_factor(mean.get());
@@ -396,14 +402,10 @@ InterferenceCache::updateUserSubchannels (const wns::node::Interface* node,
   {
       return;
   }
-  
   std::set<int>& set1 = userSubbands_[node->getNodeID()];
   std::set<int> set2;
-  
   std::set_intersection(set1.begin(), set1.end(), channels.begin(), channels.end(), std::inserter(set2, set2.end()));
-  
   set1.swap(set2);
-  
 }
 
 
