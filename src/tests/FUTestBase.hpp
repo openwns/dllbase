@@ -37,7 +37,7 @@
 #include <WNS/CppUnit.hpp>
 
 namespace dll { namespace tests {
-  
+
   /**
    * @brief Base class for dll::FU tests.
    *
@@ -54,9 +54,9 @@ namespace dll { namespace tests {
 
     virtual
     ~FUTestBase();
-		
+
   protected:
-		
+
     /**
      * @brief Returns a Compound carrying a FakePDU
      */
@@ -68,14 +68,14 @@ namespace dll { namespace tests {
      * @return Last compound sent by the lower stub.
      */
     wns::ldk::CompoundPtr sendCompound(const wns::ldk::CompoundPtr& compound);
-		
+
     /**
      * @brief Let the lower stub receive a compound.
      *
      * @return Last compound received by the upper stub.
      */
     wns::ldk::CompoundPtr receiveCompound(const wns::ldk::CompoundPtr& compound);
-		
+
     /**
      * @brief Number of calls to sendCompound.
      */
@@ -90,12 +90,12 @@ namespace dll { namespace tests {
      * @brief Number of calls to receiveCompound.
      */
     unsigned int compoundsReceived() const;
-		
+
     /**
      * @brief Number of compounds received by the upper stub.
      */
     unsigned int compoundsDelivered() const;
-		
+
     /**
      * @brief Return the FUN.
      */
@@ -111,7 +111,7 @@ namespace dll { namespace tests {
      */
     wns::ldk::tools::StubBase* getUpperStub() const;
 
-		
+
     virtual void prepare();
     virtual void cleanup();
 
@@ -168,7 +168,7 @@ namespace dll { namespace tests {
 
     wns::ldk::tools::StubBase* upperStub;
     wns::ldk::tools::StubBase* lowerStub;
-		
+
     unsigned int accepted;
     unsigned int received;
   };

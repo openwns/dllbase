@@ -43,28 +43,29 @@
 
 namespace dll { namespace compoundSwitch {
 
-	class FilterInterface;
-	class Filter;
+    class FilterInterface;
+    class Filter;
 
-	/**
-	 * @brief Command for the FU CompoundSwitch and its filters
-	 * @author Markus Grauer <gra@comnets.rwth-aachen.de>
-	 *
-	 */
+    /**
+     * @brief Command for the FU CompoundSwitch and its filters
+     * @author Markus Grauer <gra@comnets.rwth-aachen.de>
+     *
+     */
 
-	class CompoundSwitchCommand :
-		public wns::ldk::Command
-	{
-	public:
-		CompoundSwitchCommand()
-		{
-			local.filterName = "";
-		}
+    class CompoundSwitchCommand :
+        public wns::ldk::Command
+    {
+    public:
+        CompoundSwitchCommand()
+        {
+            local.filterName = "";
+        }
 
-		struct {
-			// Used by filter::FilterByFilterName
-			std::string filterName;
-		} local;
+        struct 
+        {
+            // Used by filter::FilterByFilterName
+            std::string filterName;
+        } local;
 		struct {} peer;
 		struct {} magic;
 	};

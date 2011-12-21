@@ -44,20 +44,23 @@ namespace services { namespace management { namespace tests {
 
 class InterferenceCacheTest : public CppUnit::TestFixture
 {
-	CPPUNIT_TEST_SUITE( InterferenceCacheTest );
-	CPPUNIT_TEST( writeData );
-	CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE( InterferenceCacheTest );
+    CPPUNIT_TEST( writeData );
+    CPPUNIT_TEST_SUITE_END();
 
 public:
-	void setUp();
-	void tearDown();
-	void writeData();
+    void setUp();
+    void tearDown();
+    void writeData();
 
 private:
-	std::auto_ptr<wns::ldk::tests::LayerStub> layer_;
-	std::auto_ptr<wns::ldk::ManagementServiceRegistry> msr_;
+    std::auto_ptr<wns::ldk::tests::LayerStub> layer_;
+    std::auto_ptr<wns::ldk::ManagementServiceRegistry> msr_;
 };
 
-}}}}
+}
+}
+}
+}
 #endif 
 

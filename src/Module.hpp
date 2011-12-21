@@ -35,27 +35,25 @@
  */
 namespace dll
 {
-	class Module :
-		public wns::module::Module<Module>
-	{
-	public:
-		Module(const wns::pyconfig::View& _pyco);
+    class Module :
+        public wns::module::Module<Module>
+    {
+    public:
+        Module(const wns::pyconfig::View& _pyco);
 
-		virtual
-		~Module();
+        virtual
+        ~Module();
 
-		// Module interface
-		virtual void
-		configure();
+        // Module interface
+        virtual void
+        configure();
 
-		virtual void
-		startUp();
+        virtual void
+        startUp();
 
-		virtual void
-		shutDown();
-	};
+        virtual void
+        shutDown();
+    };
 }
 
 #endif // NOT defined DLL_MODULE_HPP
-
-

@@ -34,12 +34,12 @@ using namespace dll::compoundSwitch::filter;
 
 
 STATIC_FACTORY_REGISTER_WITH_CREATOR(FilterAll,
-									 dll::compoundSwitch::Filter,
-									 "dll.compoundSwitch.filter.FilterAll",
-									 dll::compoundSwitch::CompoundSwitchConfigCreator);
+                                    dll::compoundSwitch::Filter,
+                                    "dll.compoundSwitch.filter.FilterAll",
+                                    dll::compoundSwitch::CompoundSwitchConfigCreator);
 
 FilterAll::FilterAll(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config) :
-	Filter(compoundSwitch, config)
+    Filter(compoundSwitch, config)
 {
 } // FilterAll
 
@@ -54,5 +54,5 @@ FilterAll::~FilterAll()
 bool
 FilterAll::filter(const wns::ldk::CompoundPtr&) const
 {
-	return true;
+    return true;
 }

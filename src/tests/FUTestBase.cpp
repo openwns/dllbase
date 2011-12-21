@@ -84,21 +84,21 @@ FUTestBase::prepare()
     std::string ring        = this->getRing();
 
     pycoL.loadString("from dll.Layer2 import Layer2\n"
-		     "import dll.UpperConvergence\n"
-		     "from wns.Node import Node\n"
-		     "from wns.FUN import FUN\n"
+             "import dll.UpperConvergence\n"
+             "from wns.Node import Node\n"
+             "from wns.FUN import FUN\n"
 
-		     "node  = Node('isi_NodeName')\n"
-		     "layer = Layer2(node,'isi_StationName', None)\n"
+             "node  = Node('isi_NodeName')\n"
+             "layer = Layer2(node,'isi_StationName', None)\n"
 
-		     "layer.setStationType('"+ stationType +"')\n"
-		     "layer.setStationID('" + stationID  +"')\n"
-		     "layer.setRing('"+ ring +"')\n"
+             "layer.setStationType('"+ stationType +"')\n"
+             "layer.setStationID('" + stationID  +"')\n"
+             "layer.setRing('"+ ring +"')\n"
 
-		     "layer.fun = FUN()\n"
-		     "layer.fun.add(dll.UpperConvergence.No(functionalUnitName='"+getUpperConvergenceName()+"',commandName='"+getUpperConvergenceName()+"'))\n"
-			 "layer.upperConvergenceName = '"+getUpperConvergenceName()+"'\n"
-		    );
+             "layer.fun = FUN()\n"
+             "layer.fun.add(dll.UpperConvergence.No(functionalUnitName='"+getUpperConvergenceName()+"',commandName='"+getUpperConvergenceName()+"'))\n"
+             "layer.upperConvergenceName = '"+getUpperConvergenceName()+"'\n"
+            );
     wns::pyconfig::View lView(pycoL, "layer");
 
     layer = new dll::tests::LayerStub();
@@ -113,9 +113,9 @@ FUTestBase::prepare()
     setUpTestFUs();
 
     upperStub
-	->connect(getUpperTestFU());
+    ->connect(getUpperTestFU());
     getLowerTestFU()
-	->connect(lowerStub);
+    ->connect(lowerStub);
 
     fun->onFUNCreated();
 } // catchExceptionSetUp
@@ -140,16 +140,16 @@ FUTestBase::cleanup()
     tearDownTestFUs();
 
     if (layer != NULL) {
-	delete layer;
-	layer = NULL;
+    delete layer;
+    layer = NULL;
     }
     if (node != NULL) {
-	delete node;
-	node = NULL;
+    delete node;
+    node = NULL;
     }
     if (stationManager != NULL) {
-	delete stationManager;
-	stationManager = NULL;
+    delete stationManager;
+    stationManager = NULL;
     }
 } // catchExceptionTearDown
 
@@ -164,12 +164,12 @@ FUTestBase::sendCompound(const wns::ldk::CompoundPtr& compound)
 {
     unsigned int initialCount = compoundsSent();
     if (upperStub->isAccepting(compound))
-	upperStub->sendData(compound);
+    upperStub->sendData(compound);
     ++accepted;
     if (compoundsSent() > initialCount)
-	return lowerStub->sent.back();
+    return lowerStub->sent.back();
     else
-	return wns::ldk::CompoundPtr();
+    return wns::ldk::CompoundPtr();
 } // sendCompound
 
 wns::ldk::CompoundPtr
@@ -179,9 +179,9 @@ FUTestBase::receiveCompound(const wns::ldk::CompoundPtr& compound)
     lowerStub->onData(compound);
     ++received;
     if (compoundsDelivered() > initialCount)
-	return upperStub->received.back();
+    return upperStub->received.back();
     else
-	return wns::ldk::CompoundPtr();
+    return wns::ldk::CompoundPtr();
 } // receiveCompound
 
 unsigned int

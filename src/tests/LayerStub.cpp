@@ -51,13 +51,13 @@ LayerStub::~LayerStub()
 std::string
 LayerStub::getName() const
 {
-	return "LayerStub";
+    return "LayerStub";
 }
 
 wns::node::Interface*
 LayerStub::getNode() const
 {
-	return node_;
+    return node_;
 }
 
 wns::ldk::fun::FUN*
@@ -84,7 +84,7 @@ LayerStub::onShutdown()
 std::string
 LayerStub::getNodeName() const
 {
-	return std::string("None");
+    return std::string("None");
 }
 
 const dll::ILayer2::AssociationInfoContainer&

@@ -37,18 +37,18 @@ using namespace dll::compoundSwitch::filter;
 
 
 STATIC_FACTORY_REGISTER_WITH_CREATOR(FilterCommand,
-									 dll::compoundSwitch::Filter,
-									 "dll.compoundSwitch.filter.FilterCommand",
-									 dll::compoundSwitch::CompoundSwitchConfigCreator);
+                                    dll::compoundSwitch::Filter,
+                                    "dll.compoundSwitch.filter.FilterCommand",
+                                    dll::compoundSwitch::CompoundSwitchConfigCreator);
 
 FilterCommand::FilterCommand(CompoundSwitch* compoundSwitch,
-							 wns::pyconfig::View& config) :
-	Filter(compoundSwitch, config),
-	friends_()
+                            wns::pyconfig::View& config) :
+    Filter(compoundSwitch, config),
+    friends_()
 {
-	friends_.commandProviderName = config.get<std::string>("commandProvider");
+    friends_.commandProviderName = config.get<std::string>("commandProvider");
 
-	friends_.commandProvider = NULL;
+    friends_.commandProvider = NULL;
 } // Filter
 
 
@@ -62,7 +62,7 @@ FilterCommand::~FilterCommand()
 void
 FilterCommand::onFUNCreated()
 {
-	friends_.commandProvider = compoundSwitch_->findFUNFriend(friends_.commandProviderName);
+    friends_.commandProvider = compoundSwitch_->findFUNFriend(friends_.commandProviderName);
 }
 
 
@@ -71,7 +71,7 @@ bool
 FilterCommand::filter(const wns::ldk::CompoundPtr& compound) const
 {
     if( compoundSwitch_->getCommandProxy()->commandIsActivated( compound->getCommandPool(), friends_.commandProvider ) )
-		return true;
+        return true;
 
-	return false;
+    return false;
 }

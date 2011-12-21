@@ -42,41 +42,44 @@ using namespace dll::services::management::tests;
 
 void InterferenceCacheTest::setUp()
 {
-	layer_.reset( new wns::ldk::tests::LayerStub() );
-	msr_.reset( new wns::ldk::ManagementServiceRegistry( layer_.get() ) );
+    layer_.reset( new wns::ldk::tests::LayerStub() );
+    msr_.reset( new wns::ldk::ManagementServiceRegistry( layer_.get() ) );
 
-	wns::pyconfig::Parser config;
-	config.loadString(
-	  "import dll.Services\n"
-      "esm = dll.Services.ESMStub(None)\n"
-	  "interferenceCache = dll.Services.InterferenceCache( \"interferenceCache\", 0.2, 0.05, esm = esm)\n"
-	  "interferenceCache.notFoundStrategy.averageCarrier = \"-96.0 dBm\"\n"
-	  "interferenceCache.notFoundStrategy.averageInterference = \"-88.0 dBm\"\n"
-	  "interferenceCache.notFoundStrategy.deviationCarrier = \"0.0 mW\"\n"
-	  "interferenceCache.notFoundStrategy.deviationInterference = \"0.0 mW\"\n"
-	  "interferenceCache.notFoundStrategy.averagePathloss = \"0.0 dB\"\n"
-	  );
+    wns::pyconfig::Parser config;
+    config.loadString
+        (
+        "import dll.Services\n"
+        "esm = dll.Services.ESMStub(None)\n"
+        "interferenceCache = dll.Services.InterferenceCache( \"interferenceCache\", 0.2, 0.05, esm = esm)\n"
+        "interferenceCache.notFoundStrategy.averageCarrier = \"-96.0 dBm\"\n"
+        "interferenceCache.notFoundStrategy.averageInterference = \"-88.0 dBm\"\n"
+        "interferenceCache.notFoundStrategy.deviationCarrier = \"0.0 mW\"\n"
+        "interferenceCache.notFoundStrategy.deviationInterference = \"0.0 mW\"\n"
+        "interferenceCache.notFoundStrategy.averagePathloss = \"0.0 dB\"\n"
+        );
 
-	layer_->addManagementService
-		( "interferenceCache",
-		  new InterferenceCache( layer_->getMSR(), wns::pyconfig::View(config, "interferenceCache") ) );
+    layer_->addManagementService
+        (
+        "interferenceCache",
+        new InterferenceCache( layer_->getMSR(), wns::pyconfig::View(config, "interferenceCache") ) 
+        );
 }
 
 void InterferenceCacheTest::writeData()
 {
-	InterferenceCache* iCache =
-		layer_->getManagementService<InterferenceCache>("interferenceCache");
-	wns::node::Interface* nodeStub = new wns::node::tests::Stub();
-	iCache->storeCarrier( nodeStub, wns::Power::from_dBm( -30.0 ), InterferenceCache::Local );
-	iCache->storeCarrier( nodeStub, wns::Power::from_dBm( -40.0 ), InterferenceCache::Local );
-	CPPUNIT_ASSERT_DOUBLES_EQUAL( -30.86, iCache->getAveragedCarrier( nodeStub ).get_dBm(), 0.01 );
+    InterferenceCache* iCache =
+        layer_->getManagementService<InterferenceCache>("interferenceCache");
+    wns::node::Interface* nodeStub = new wns::node::tests::Stub();
+    iCache->storeCarrier( nodeStub, wns::Power::from_dBm( -30.0 ), InterferenceCache::Local );
+    iCache->storeCarrier( nodeStub, wns::Power::from_dBm( -40.0 ), InterferenceCache::Local );
+    CPPUNIT_ASSERT_DOUBLES_EQUAL( -30.86, iCache->getAveragedCarrier( nodeStub ).get_dBm(), 0.01 );
 
-	iCache->storeInterference( nodeStub, wns::Power::from_dBm( -30.0 ), InterferenceCache::Local );
-	iCache->storeInterference( nodeStub, wns::Power::from_dBm( -40.0 ), InterferenceCache::Local );
-	CPPUNIT_ASSERT_DOUBLES_EQUAL( -30.86, iCache->getAveragedInterference( nodeStub ).get_dBm(), 0.01 );
+    iCache->storeInterference( nodeStub, wns::Power::from_dBm( -30.0 ), InterferenceCache::Local );
+    iCache->storeInterference( nodeStub, wns::Power::from_dBm( -40.0 ), InterferenceCache::Local );
+    CPPUNIT_ASSERT_DOUBLES_EQUAL( -30.86, iCache->getAveragedInterference( nodeStub ).get_dBm(), 0.01 );
 
-	iCache->storeCarrier( nodeStub, wns::Power::from_dBm( -30.0 ), InterferenceCache::Remote );
-	iCache->storeCarrier( nodeStub, wns::Power::from_dBm( -40.0 ), InterferenceCache::Remote );
+    iCache->storeCarrier( nodeStub, wns::Power::from_dBm( -30.0 ), InterferenceCache::Remote );
+    iCache->storeCarrier( nodeStub, wns::Power::from_dBm( -40.0 ), InterferenceCache::Remote );
 	CPPUNIT_ASSERT_DOUBLES_EQUAL( -31.0, iCache->getAveragedCarrier( nodeStub ).get_dBm(), 0.01 );
 
 	iCache->storeInterference( nodeStub, wns::Power::from_dBm( -30.0 ), InterferenceCache::Remote );

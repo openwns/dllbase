@@ -33,36 +33,38 @@
 
 namespace dll { namespace compoundSwitch {
 
-	class CompoundSwitch;
+    class CompoundSwitch;
 
-	/**
-	 * @brief Creator implementation to be used with StaticFactory.
-	 *
-	 * Useful for constructors with a CompoundSwitch and pyconfig::View
-	 * parameter.
-	 *
-	 */
-	template <typename T, typename KIND = T>
-	struct CompoundSwitchConfigCreator :
-		public CompoundSwitchConfigCreator<KIND, KIND>
-	{
-		virtual KIND* create(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config)
-		{
-			return new T(compoundSwitch, config);
-		}
-	};
+    /**
+     * @brief Creator implementation to be used with StaticFactory.
+     *
+     * Useful for constructors with a CompoundSwitch and pyconfig::View
+     * parameter.
+     *
+     */
+    template <typename T, typename KIND = T>
+    struct CompoundSwitchConfigCreator :
+        public CompoundSwitchConfigCreator<KIND, KIND>
+    {
+        virtual KIND* create(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config)
+        {
+            return new T(compoundSwitch, config);
+        }
+    };
 
-	template <typename KIND>
-	struct CompoundSwitchConfigCreator<KIND, KIND>
-	{
-	public:
-		virtual KIND* create(CompoundSwitch*, wns::pyconfig::View&) = 0;
+    template <typename KIND>
+    struct CompoundSwitchConfigCreator<KIND, KIND>
+    {
+    public:
+        virtual KIND* create(CompoundSwitch*, wns::pyconfig::View&) = 0;
 
-		virtual ~CompoundSwitchConfigCreator()
-		{}
-	};
+        virtual ~CompoundSwitchConfigCreator()
+        {
+        }
+    };
 
-}}
+}
+}
 
 #endif // NOT defined DLL_COMPOUNDSWITCH_COMPOUNDSWITCH_HPP
 

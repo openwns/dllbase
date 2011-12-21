@@ -34,50 +34,66 @@
 
 namespace dll { namespace tests {
 
-	/**
-	 * @brief Simple dll::Layer Stub for unit tests
-	 * @author Ismet Aktas <isi@comnets.rwth-aachen.de>
-	 *
-	 * This LayerStub will automatically create a node::tests::Stub
-	 */
-	class LayerStub :
-		public dll::ILayer2
-	{
-	public:
-		LayerStub();
+    /**
+     * @brief Simple dll::Layer Stub for unit tests
+     * @author Ismet Aktas <isi@comnets.rwth-aachen.de>
+     *
+     * This LayerStub will automatically create a node::tests::Stub
+     */
+    class LayerStub :
+        public dll::ILayer2
+    {
+    public:
+        LayerStub();
 
-		virtual
-		~LayerStub();
+        virtual
+        ~LayerStub();
 
-		virtual std::string getName() const;
+        virtual std::string getName() const;
 
-		virtual wns::node::Interface* getNode() const;
+        virtual wns::node::Interface* getNode() const;
 
-		virtual void onNodeCreated();
+        virtual void onNodeCreated();
 
-		virtual void onWorldCreated();
+        virtual void onWorldCreated();
 
-		virtual void onShutdown();
+        virtual void onShutdown();
 
-		virtual std::string getNodeName() const;
+        virtual std::string getNodeName() const;
 
                 virtual wns::ldk::ControlServiceRegistry*
-                getCSR() { assure(false, "Not implemented"); }
+                getCSR() 
+                {
+                    assure(false, "Not implemented");
+                }
 
                 virtual void
-                addControlService(const std::string& name, wns::ldk::ControlServiceInterface* csi) {}
+                addControlService(const std::string& name, wns::ldk::ControlServiceInterface* csi)
+                {
+                }
 
                 virtual wns::ldk::ManagementServiceRegistry*
-                getMSR() { assure(false, "Not implemented"); }
+                getMSR() 
+                {
+                    assure(false, "Not implemented");
+                }
 
                 virtual void
-                addManagementService(const std::string& name, wns::ldk::ManagementServiceInterface* msi) {}
+                addManagementService(const std::string& name, wns::ldk::ManagementServiceInterface* msi)
+                {
+                }
 
                 virtual wns::ldk::ManagementServiceInterface*
-            findManagementService(std::string) const { assure(false, "Not implemented");}
+            findManagementService(std::string) const 
+                {
+                    assure(false, "Not implemented");
+                }
 
                 virtual wns::ldk::ControlServiceInterface*
-            findControlServiceInterface(std::string) const {assure(false, "Not implemented");}
+            findControlServiceInterface(std::string) const
+                {
+                    assure(false, "Not implemented");
+                }
 
                 /** @brief Access to the internal ID */
                 virtual StationIDType
@@ -100,29 +116,36 @@ namespace dll { namespace tests {
             getFUN() const;
 
                 virtual void
-                addAssociationInfoProvider( const std::string& id, dll::services::control::AssociationInfo* provider ) { assure(false, "Not implemented");}
+                addAssociationInfoProvider( const std::string& id, dll::services::control::AssociationInfo* provider )
+                {
+                    assure(false, "Not implemented");
+                }
 
                 virtual const AssociationInfoContainer&
             getAssociationInfoProvider(const std::string& id) const;
 
                 virtual void
-                updateContext(const std::string& key, int value) { assure(false, "Not implemented");}
+                updateContext(const std::string& key, int value)
+                {
+                    assure(false, "Not implemented");
+                }
 
                 virtual void
-                setContext(const std::string& key, int value) { assure(false, "Not implemented");}
-	private:
-		virtual void
-		doStartup();
+                setContext(const std::string& key, int value)   
+                {
+                    assure(false, "Not implemented");
+                }
+    private:
+        virtual void
+        doStartup();
 
-		wns::node::Interface* node_;
-        
+        wns::node::Interface* node_;
+
         wns::ldk::fun::FUN* fun_;
-        
+
         AssociationInfoContainer aic_; 
-	};
+    };
 } // tests
 } // dll
 
 #endif // NOT defined WNS_LDK_LAYER_HPP
-
-

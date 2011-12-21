@@ -37,78 +37,82 @@
 
 namespace dll { namespace compoundSwitch {
 
-	class CompoundSwitch;
+    class CompoundSwitch;
 
-	/**
-	 * @brief Interface of basic class Filter for all CompoundSwitch filters.
+    /**
+     * @brief Interface of basic class Filter for all CompoundSwitch filters.
      * @author Markus Grauer <gra@comnets.rwth-aachen.de>
-	 *
-	 */
-	class IFilter
-	{
-	public:
-
-		virtual
-		~IFilter() {}
-
-		virtual void
-        onFUNCreated() = 0;
-
-		virtual bool
-		filter(const wns::ldk::CompoundPtr& compound) const = 0;
-
-		virtual std::string
-		getName() const = 0;
-
-	};
-
-	/**
-	 * @brief Basic class Filter for all CompoundSwitch filters.
-     * @author Markus Grauer <gra@comnets.rwth-aachen.de>
-	 *
-	 */
-	class Filter:
-	    public IFilter
-	{
-	public:
-
-		Filter(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config);
+     *
+     */
+    class IFilter
+    {
+    public:
 
         virtual
-		~Filter();
+        ~IFilter()
+        {
+        }
 
-		virtual void
-		onFUNCreated()
-			{}
+        virtual void
+        onFUNCreated() = 0;
 
-		virtual bool
-		filter(const wns::ldk::CompoundPtr& compound) const = 0;
+        virtual bool
+        filter(const wns::ldk::CompoundPtr& compound) const = 0;
 
         virtual std::string
-		getName() const
-			{
-				return name_;
-			}
+        getName() const = 0;
 
-		bool
-		operator==( const Filter& rhs)
-			{
-				return getName() == rhs.getName();
-			}
+    };
+
+    /**
+     * @brief Basic class Filter for all CompoundSwitch filters.
+     * @author Markus Grauer <gra@comnets.rwth-aachen.de>
+     *
+     */
+    class Filter:
+        public IFilter
+    {
+    public:
+
+        Filter(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config);
+
+        virtual
+        ~Filter();
+
+        virtual void
+        onFUNCreated()
+            {
+            }
+
+        virtual bool
+        filter(const wns::ldk::CompoundPtr& compound) const = 0;
+
+        virtual std::string
+        getName() const
+            {
+                return name_;
+            }
+
+        bool
+        operator==( const Filter& rhs)
+            {
+                return getName() == rhs.getName();
+            }
 
 
 
-	protected:
+    protected:
 
-		std::string name_;
+        std::string name_;
 
-		CompoundSwitch* compoundSwitch_;
-		wns::logger::Logger logger_;
-	};
+        CompoundSwitch* compoundSwitch_;
+        wns::logger::Logger logger_;
+    };
 
-	typedef compoundSwitch::CompoundSwitchConfigCreator<Filter> FilterCreator;
-	typedef wns::StaticFactory<FilterCreator> FilterFactory;
+    typedef compoundSwitch::CompoundSwitchConfigCreator<Filter> FilterCreator;
+    typedef wns::StaticFactory<FilterCreator> FilterFactory;
 
-}}
+}
+}
 
 #endif // NOT defined DLL_COMPOUNDSWITCH_FILTER_HPP

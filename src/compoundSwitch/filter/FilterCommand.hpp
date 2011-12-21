@@ -36,39 +36,42 @@
 
 namespace dll { namespace compoundSwitch { namespace filter {
 
-   	/**
-	 * @brief This filter matches to the activated command of a Functional Unit.
+    /**
+     * @brief This filter matches to the activated command of a Functional Unit.
      * @author Markus Grauer <gra@comnets.rwth-aachen.de>
-	 *
-	 * In the Pyconfig the related Functional Unit, which the filter is matching
-	 * to, is configured.
-	 *
-	 */
-	class FilterCommand :
-		public Filter
-	{
-	public:
-		FilterCommand(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config);
+     *
+     * In the Pyconfig the related Functional Unit, which the filter is matching
+     * to, is configured.
+     *
+     */
+    class FilterCommand :
+        public Filter
+    {
+    public:
+        FilterCommand(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config);
 
-		~FilterCommand();
+        ~FilterCommand();
 
-		virtual void
-		onFUNCreated();
+        virtual void
+        onFUNCreated();
 
-		virtual bool
-		filter(const wns::ldk::CompoundPtr& compound) const;
+        virtual bool
+        filter(const wns::ldk::CompoundPtr& compound) const;
 
 
-	private:
+    private:
 
-		struct Friends {
-			std::string commandProviderName;
+        struct Friends
+        {
+            std::string commandProviderName;
 
-			wns::ldk::FunctionalUnit* commandProvider;
-		} friends_;
+            wns::ldk::FunctionalUnit* commandProvider;
+        } friends_;
 
-	};
+    };
 
-}}}
+}
+}
+}
 
 #endif // not defined DLL_COMPOUNDSWITCH_FILTER_FILTERCOMMAND_HPP

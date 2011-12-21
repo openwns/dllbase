@@ -36,7 +36,7 @@ using namespace dll::compoundSwitch;
 Filter::Filter(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config) :
     name_(config.get<std::string>("name")),
     compoundSwitch_(compoundSwitch),
-	logger_("WNS", "dll::compoundSwitch::Filter")
+    logger_("WNS", "dll::compoundSwitch::Filter")
 {
 } // Filter
 

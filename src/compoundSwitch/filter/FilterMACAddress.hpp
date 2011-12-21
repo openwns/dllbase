@@ -37,36 +37,38 @@
 
 namespace dll { namespace compoundSwitch { namespace filter {
 
-   	/**
-	 * @brief This filter matches to the source or destination MAC Address which
-	 * is given in the upperConvergence command
-	 *
+    /**
+     * @brief This filter matches to the source or destination MAC Address which
+     * is given in the upperConvergence command
+     *
      * @author Sebastian Max <smx@comnets.rwth-aachen.de>
-	 *
-	 * In the PyConfig the MAC Address and the type (i.e. source or destination)
-	 * has to be set.
-	 *
-	 */
-	class FilterMACAddress :
-		public Filter
-	{
-	public:
-		FilterMACAddress(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config);
+     *
+     * In the PyConfig the MAC Address and the type (i.e. source or destination)
+     * has to be set.
+     *
+     */
+    class FilterMACAddress :
+        public Filter
+    {
+    public:
+        FilterMACAddress(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config);
 
-		~FilterMACAddress();
+        ~FilterMACAddress();
 
-		virtual void
-		onFUNCreated();
+        virtual void
+        onFUNCreated();
 
-		virtual bool
-		filter(const wns::ldk::CompoundPtr& compound) const;
+        virtual bool
+        filter(const wns::ldk::CompoundPtr& compound) const;
 
 
-	private:
-		std::string ucCommandName_;
-		wns::service::dll::UnicastAddress filterAddress_;
-		bool filterTarget_;
-	};
-}}}
+    private:
+        std::string ucCommandName_;
+        wns::service::dll::UnicastAddress filterAddress_;
+        bool filterTarget_;
+    };
+}
+}
+}
 
 #endif // not defined DLL_COMPOUNDSWITCH_FILTER_FILTERCOMMAND_HPP

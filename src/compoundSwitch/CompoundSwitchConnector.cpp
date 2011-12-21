@@ -34,31 +34,31 @@ using namespace dll::compoundSwitch;
 
 // CompoundSwitchConnector::~CompoundSwitchConnector()
 // {
-// 	while ( !filters_.empty() )
-// 	{
-// 		delete *(filters_.begin());
-// 		filters_.erase(filters_.begin());
-// 	}
+//      while ( !filters_.empty() )
+//      {
+//      delete *(filters_.begin());
+//      filters_.erase(filters_.begin());
+//      }
 // }
 
 void
 CompoundSwitchConnector::addFilter(IFilter* filter)
 {
-	// check for double entries
-	Filters::iterator it = filters_.begin();
-	for(;it != filters_.end(); ++it)
-	{
-		if ((*it)->getName() == filter->getName())
-		{
-			std::ostringstream errorLog;
-			errorLog << "dll::compoundSwitch::CompoundSwitchConnector: Double entry found in UL od Dl Filter list: " 
-					 << filter->getName();
-			assure( 0, errorLog.str() );
-		}
-	}
+    // check for double entries
+    Filters::iterator it = filters_.begin();
+    for(;it != filters_.end(); ++it)
+    {
+        if ((*it)->getName() == filter->getName())
+        {
+            std::ostringstream errorLog;
+            errorLog << "dll::compoundSwitch::CompoundSwitchConnector: Double entry found in UL od Dl Filter list: "
+                     << filter->getName();
+            assure( 0, errorLog.str() );
+        }
+    }
 
-	// add Filter
-	filters_.push_back( filter );
+    // add Filter
+    filters_.push_back( filter );
 }
 
 void
@@ -66,59 +66,59 @@ CompoundSwitchConnector::onFUNCreated(bool mustAccept)
 {
     this->mustAccept_ = mustAccept;
 
-	// Call onFUNCreated of every filter
-	for(Filters::iterator it = filters_.begin();
-		it != filters_.end(); ++it)
-	{
-		(*it)->onFUNCreated();
-	}
+    // Call onFUNCreated of every filter
+    for(Filters::iterator it = filters_.begin();
+        it != filters_.end(); ++it)
+    {
+        (*it)->onFUNCreated();
+    }
 
 }
 
 IFilter*
 CompoundSwitchConnector::getFilter(const wns::ldk::CompoundPtr& compound) const
 {
-	for(Filters::const_iterator it = filters_.begin();
-		it != filters_.end(); ++it)
-	{
-		if( dynamic_cast<IFilter*>(*it)->filter(compound) )
-		{
-			return (*it);
-			break;
-		}
-	}
-	assure (0, "CompoundSwitchDeliverer::getFilter: No filter found for this compound. \n");
-	return filters_.back();
+    for(Filters::const_iterator it = filters_.begin();
+        it != filters_.end(); ++it)
+    {
+        if( dynamic_cast<IFilter*>(*it)->filter(compound) )
+        {
+            return (*it);
+            break;
+        }
+    }
+    assure (0, "CompoundSwitchDeliverer::getFilter: No filter found for this compound. \n");
+    return filters_.back();
 } // getFilter
 
 CompoundSwitchConnector::Filters
 CompoundSwitchConnector::getAllFilter() const
 {
-	Filters result;
-	for(Filters::const_iterator it = filters_.begin();
-		it != filters_.end(); ++it)
-	{
-		result.push_back(*it);
-	}
-	return result;
+    Filters result;
+    for(Filters::const_iterator it = filters_.begin();
+        it != filters_.end(); ++it)
+    {
+        result.push_back(*it);
+    }
+    return result;
 } //getAllFilter()
 
 void
 CompoundSwitchConnector::add(wns::ldk::IConnectorReceptacle* fu)
 {
-	fus.push_back(fu);
+    fus.push_back(fu);
 } // add
 
 void
 CompoundSwitchConnector::clear()
 {
-	fus.clear();
+    fus.clear();
 } // clear
 
 unsigned long int
 CompoundSwitchConnector::size() const
 {
-	return fus.size();
+    return fus.size();
 } // size
 
 const wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer
@@ -127,35 +127,35 @@ CompoundSwitchConnector::get() const
     wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer result;
 
     for(wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer::const_iterator it = fus.begin();
-		it != fus.end();
-		++it) {
-		result.push_back(*it);
-	}
+        it != fus.end(); ++it)
+    {
+        result.push_back(*it);
+    }
 
-	return result;
+    return result;
 } // get
 
 void
 CompoundSwitchConnector::set(const wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer& src)
 {
-	fus.clear();
+    fus.clear();
 
         for(wns::ldk::Link<wns::ldk::IConnectorReceptacle>::ExchangeContainer::const_iterator it = src.begin();
-		it != src.end();
-		++it) {
-		fus.push_back(*it);
-	}
+        it != src.end(); ++it)
+    {
+        fus.push_back(*it);
+    }
 } // set
 
 bool
 CompoundSwitchConnector::hasAcceptor(const wns::ldk::CompoundPtr& compound)
 {
-	int i = 0;
-	for(Filters::const_iterator it = filters_.begin();
-		it != filters_.end(); ++it)
-	{
-		if( (*it)->filter(compound) )
-		{
+    int i = 0;
+    for(Filters::const_iterator it = filters_.begin();
+        it != filters_.end(); ++it)
+    {
+        if( (*it)->filter(compound) )
+        {
             if(this->mustAccept_)
             {
                 if (fus.at(i)->isAccepting(compound))
@@ -165,21 +165,21 @@ CompoundSwitchConnector::hasAcceptor(const wns::ldk::CompoundPtr& compound)
             {
                 return(fus.at(i)->isAccepting(compound));
             }
-		}
-		++i;
-	}
-	return false;
+        }
+        ++i;
+    }
+    return false;
 }
 
 wns::ldk::IConnectorReceptacle*
 CompoundSwitchConnector::getAcceptor(const wns::ldk::CompoundPtr& compound)
 {
-	int i = 0;
-	for(Filters::const_iterator it = filters_.begin();
-		it != filters_.end(); ++it)
-	{
-		if( (*it)->filter(compound) )
-		{
+    int i = 0;
+    for(Filters::const_iterator it = filters_.begin();
+        it != filters_.end(); ++it)
+    {
+        if( (*it)->filter(compound) )
+        {
             if(this->mustAccept_)
             {
                 if ( fus.at(i)->isAccepting(compound) )
@@ -189,9 +189,9 @@ CompoundSwitchConnector::getAcceptor(const wns::ldk::CompoundPtr& compound)
             {
                 return fus.at(i);
             }
-		}
-		++i;
-	}
-	throw wns::Exception("CompoundSwitchConnector::getAcceptor: No filter found for this compound.");
-	return 0;
+        }
+        ++i;
+    }
+    throw wns::Exception("CompoundSwitchConnector::getAcceptor: No filter found for this compound.");
+    return 0;
 }

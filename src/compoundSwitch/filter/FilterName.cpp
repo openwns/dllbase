@@ -38,14 +38,14 @@ using namespace dll::compoundSwitch::filter;
 
 
 STATIC_FACTORY_REGISTER_WITH_CREATOR(FilterName,
-									 dll::compoundSwitch::Filter,
-									 "dll.compoundSwitch.filter.FilterName",
-									 dll::compoundSwitch::CompoundSwitchConfigCreator);
+                                    dll::compoundSwitch::Filter,
+                                    "dll.compoundSwitch.filter.FilterName",
+                                    dll::compoundSwitch::CompoundSwitchConfigCreator);
 
 FilterName::FilterName(CompoundSwitch* compoundSwitch,
-					   wns::pyconfig::View& config) :
-	Filter(compoundSwitch, config),
-	friends_()
+                    wns::pyconfig::View& config) :
+    Filter(compoundSwitch, config),
+    friends_()
 {
 } // Filter
 
@@ -62,13 +62,13 @@ bool
 FilterName::filter(const wns::ldk::CompoundPtr& compound) const
 {
     if( compoundSwitch_->getCommand( compound->getCommandPool() )
-		->local.filterName == getName() )
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+        ->local.filterName == getName() )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 
 }

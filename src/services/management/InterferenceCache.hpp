@@ -42,8 +42,10 @@
 #include <WNS/service/phy/power/PowerMeasurement.hpp>
 #include <WNS/scheduler/SchedulerTypes.hpp>
 
-namespace wns {
-	namespace ldk {
+namespace wns
+{
+	namespace ldk
+    {
 		class ManagementServiceRegistry;
 	}
 }
@@ -53,27 +55,29 @@ namespace dll { namespace services { namespace management {
 
 	/// The interference cache provides averaged carrier and interference values.
 	class InterferenceCache :
-		public wns::ldk::ManagementService
+	public wns::ldk::ManagementService
 	{
-	public:
-		/**
-		 * @brief Strategy that specifies the behaviour if the requested
-		 * value is not found.
-		 *
-		 * Whenever a value of the InterferenceCache is requested and
-		 * the value is not available, the NotFoundStrategy is called to
-		 * handle the request.
-		 */
+	    public:
+	    	/**
+	    	 * @brief Strategy that specifies the behaviour if the requested
+	    	 * value is not found.
+	    	 *
+	    	 * Whenever a value of the InterferenceCache is requested and
+	    	 * the value is not available, the NotFoundStrategy is called to
+	    	 * handle the request.
+	    	 */
 
 		class NotFoundStrategy
 		{
-		public:
-			virtual ~NotFoundStrategy() {}
+	    	public:
+    		virtual ~NotFoundStrategy()
+            {
+            }
 
-			/**
-			 * @brief Handles unavailable average carrier values.
-			 */
-			virtual wns::Power notFoundAverageCarrier() = 0;
+	   		/**
+	   		 * @brief Handles unavailable average carrier values.
+	    	 */
+	    	virtual wns::Power notFoundAverageCarrier() = 0;
 
 			/**
 			 * @brief Handles unavailable average interference values.
@@ -104,21 +108,21 @@ namespace dll { namespace services { namespace management {
 		 * @brief A NotFoundStrategy that returns constant values.
 		 */
 		class ConstantValue :
-			public NotFoundStrategy
+		public NotFoundStrategy
 		{
-		public:
+		    public:
 
-			ConstantValue( const wns::pyconfig::View& );
+		    ConstantValue( const wns::pyconfig::View& );
 
-			wns::Power notFoundAverageCarrier()
-			{
-				return averageCarrier;
-			}
+		   	wns::Power notFoundAverageCarrier()
+		   	{
+		   		return averageCarrier;
+	    	}
 
-			wns::Power notFoundAverageInterference()
-			{
-				return averageInterference;
-			}
+	    	wns::Power notFoundAverageInterference()
+	    	{
+	    		return averageInterference;
+	    	}
 
 			wns::Ratio notFoundAveragePathloss()
 			{
@@ -135,23 +139,24 @@ namespace dll { namespace services { namespace management {
 				return deviationInterference;
 			}
 
-		private:
-			wns::Power averageCarrier;
-			wns::Power averageInterference;
-			wns::Power deviationCarrier;
-			wns::Power deviationInterference;
-			wns::Ratio averagePathloss;
+		    private:
+		    	wns::Power averageCarrier;
+		       	wns::Power averageInterference;
+	    		wns::Power deviationCarrier;
+	    		wns::Power deviationInterference;
+	    		wns::Ratio averagePathloss;
 		};
 
 		/**
 		 * @brief A NotFoundStrategy that throws an exception.
 		 */
 		class Complain :
-			public virtual NotFoundStrategy
+		public virtual NotFoundStrategy
 		{
-		public:
-			Complain(const wns::pyconfig::View&)
-			{}
+    		public:
+    		Complain(const wns::pyconfig::View&)
+   			{
+            }
 
 			wns::Power notFoundAverageCarrier()
 			{
@@ -187,12 +192,15 @@ namespace dll { namespace services { namespace management {
 
 		InterferenceCache( wns::ldk::ManagementServiceRegistry*, const wns::pyconfig::View& config );
 
-		virtual ~InterferenceCache(){}
+		virtual ~InterferenceCache()
+        {
+        }
 
         virtual void
         onMSRCreated();
 
-		enum ValueOrigin {
+		enum ValueOrigin
+        {
 			Local,
 			Remote
 		};
@@ -299,21 +307,22 @@ namespace dll { namespace services { namespace management {
 		 * @brief A key for the internal representation of the cache.
 		 */
 		class InterferenceCacheKey :
-			public std::binary_function<const InterferenceCacheKey, const InterferenceCacheKey, bool>
+		public std::binary_function<const InterferenceCacheKey, const InterferenceCacheKey, bool>
 		{
-		public:
+		    public:
 			InterferenceCacheKey(wns::node::Interface* node, int subBand, int timeSlot = ANYTIME) :
-				node_(node),
-				subBand_(subBand),
-                timeSlot_(timeSlot)
-			{}
+			node_(node),
+			subBand_(subBand),
+            timeSlot_(timeSlot)
+			{
+            }
 
 			bool operator<(const InterferenceCacheKey& rhs) const
 			{
 				if ( node_->getNodeID() == rhs.node_->getNodeID() )
                 {
                     if(subBand_ == rhs.subBand_)
-                        return timeSlot_ < rhs.timeSlot_;
+                    return timeSlot_ < rhs.timeSlot_;
 					return subBand_ < rhs.subBand_;
                 }
 				return node_->getNodeID() < rhs.node_->getNodeID();

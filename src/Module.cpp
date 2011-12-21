@@ -33,15 +33,15 @@
 using namespace dll;
 
 STATIC_FACTORY_REGISTER_WITH_CREATOR(
-	Module,
-	wns::module::Base,
-	"dll",
-	wns::PyConfigViewCreator);
+    Module,
+    wns::module::Base,
+    "dll",
+    wns::PyConfigViewCreator);
 
 Module::Module(const wns::pyconfig::View& _pyco) :
-	wns::module::Module<Module>(_pyco)
+    wns::module::Module<Module>(_pyco)
 {
-//	version = wns::VersionInformation(BUILDVINFO);
+//  version = wns::VersionInformation(BUILDVINFO);
 }
 
 Module::~Module()

@@ -37,24 +37,26 @@
 namespace dll { namespace compoundSwitch { namespace filter {
 
 
-   	/**
-	 * @brief This filter match at any compound.
+    /**
+     * @brief This filter match at any compound.
      * @author Markus Grauer <gra@comnets.rwth-aachen.de>
-	 *
-	 */
-	class FilterAll :
-		public Filter
-	{
-	public:
-		FilterAll(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config);
+     *
+     */
+    class FilterAll :
+        public Filter
+    {
+    public:
+        FilterAll(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config);
 
-		~FilterAll();
+        ~FilterAll();
 
-		virtual bool
-		filter(const wns::ldk::CompoundPtr& compound) const;
-	};
+        virtual bool
+        filter(const wns::ldk::CompoundPtr& compound) const;
+    };
 
-}}}
+}
+}
+}
 
 #endif // NOT defined DLL_COMPOUNDSWITCH_FILTER_FILTERALL_HPP
 

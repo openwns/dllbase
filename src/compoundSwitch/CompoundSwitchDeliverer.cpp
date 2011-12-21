@@ -125,25 +125,25 @@ CompoundSwitchDeliverer::get() const
     wns::ldk::Link<wns::ldk::IDelivererReceptacle>::ExchangeContainer result;
 
     for(wns::ldk::Link<wns::ldk::IDelivererReceptacle>::ExchangeContainer::const_iterator it = fus.begin();
-		it != fus.end();
-		++it) {
-		result.push_back(*it);
-	}
+        it != fus.end(); ++it)
+    {
+        result.push_back(*it);
+    }
 
-	return result;
+    return result;
 } // get
 
 
 void
 CompoundSwitchDeliverer::set(const wns::ldk::Link<wns::ldk::IDelivererReceptacle>::ExchangeContainer& src)
 {
-	fus.clear();
+    fus.clear();
 
         for(wns::ldk::Link<wns::ldk::IDelivererReceptacle>::ExchangeContainer::const_iterator it = src.begin();
-		it != src.end();
-		++it) {
-		fus.push_back(*it);
-	}
+        it != src.end(); ++it)
+    {
+        fus.push_back(*it);
+    }
 } // set
 
 
@@ -151,17 +151,17 @@ CompoundSwitchDeliverer::set(const wns::ldk::Link<wns::ldk::IDelivererReceptacle
 wns::ldk::IDelivererReceptacle*
 CompoundSwitchDeliverer::getAcceptor(const wns::ldk::CompoundPtr& compound)
 {
-	int i = 0;
-	for(Filters::const_iterator it = filters_.begin();
-		it != filters_.end(); ++it)
-	{
-		if( dynamic_cast<IFilter*>(*it)->filter(compound) )
-		{
-			return fus.at(i);
-			break;
-		}
-		++i;
-	}
-	assure (0, "CompoundSwitchDeliverer::getAcceptor: No filter found for this compound. \n");
-	return fus.back();
+    int i = 0;
+    for(Filters::const_iterator it = filters_.begin();
+        it != filters_.end(); ++it)
+    {
+        if( dynamic_cast<IFilter*>(*it)->filter(compound) )
+        {
+            return fus.at(i);
+            break;
+        }
+        ++i;
+    }
+    assure (0, "CompoundSwitchDeliverer::getAcceptor: No filter found for this compound. \n");
+    return fus.back();
 } // getAcceptor

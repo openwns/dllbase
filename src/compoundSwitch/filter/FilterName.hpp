@@ -35,34 +35,38 @@
 
 namespace dll { namespace compoundSwitch { namespace filter {
 
-   	/**
-	 * @brief This filter matches to the local.filterName entry
-	 *        of the CompoundSwitchCommand according to his name.
+    /**
+     * @brief This filter matches to the local.filterName entry
+     *        of the CompoundSwitchCommand according to his name.
      * @author Markus Grauer <gra@comnets.rwth-aachen.de>
-	 *
-	 */
-	class FilterName :
-		public Filter
-	{
-	public:
-		FilterName(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config);
+     *
+     */
+    class FilterName :
+        public Filter
+    {
+    public:
+        FilterName(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config);
 
-		~FilterName();
+        ~FilterName();
 
-		virtual void
-		onFUNCreated();
+        virtual void
+        onFUNCreated();
 
-		virtual bool
-		filter(const wns::ldk::CompoundPtr& compound) const;
+        virtual bool
+        filter(const wns::ldk::CompoundPtr& compound) const;
 
 
-	private:
-		struct Friends {
-		} friends_;
+    private:
+        struct Friends
+        {
+        }
+        friends_;
 
-	};
+    };
 
-}}}
+}
+}
+}
 
 #endif // NOT defined DLL_COMPOUNDSWITCH_FILTER_FILTERNAME_HPP
 

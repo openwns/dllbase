@@ -36,16 +36,16 @@ using namespace dll::compoundSwitch::filter;
 
 
 STATIC_FACTORY_REGISTER_WITH_CREATOR(FilterMACAddress,
-									 dll::compoundSwitch::Filter,
-									 "dll.compoundSwitch.filter.FilterMACAddress",
-									 dll::compoundSwitch::CompoundSwitchConfigCreator);
+                                    dll::compoundSwitch::Filter,
+                                    "dll.compoundSwitch.filter.FilterMACAddress",
+                                    dll::compoundSwitch::CompoundSwitchConfigCreator);
 
 FilterMACAddress::FilterMACAddress(CompoundSwitch* compoundSwitch,
-								   wns::pyconfig::View& config) :
-	Filter(compoundSwitch, config),
-	ucCommandName_(config.get<std::string>("upperConvergenceCommandName")),
-	filterAddress_(config.get<wns::service::dll::UnicastAddress>("filterMACAddress")),
-	filterTarget_(config.get<bool>("filterTarget"))
+                                wns::pyconfig::View& config) :
+    Filter(compoundSwitch, config),
+    ucCommandName_(config.get<std::string>("upperConvergenceCommandName")),
+    filterAddress_(config.get<wns::service::dll::UnicastAddress>("filterMACAddress")),
+    filterTarget_(config.get<bool>("filterTarget"))
 {
 } // Filter
 
@@ -65,28 +65,28 @@ FilterMACAddress::onFUNCreated()
 bool
 FilterMACAddress::filter(const wns::ldk::CompoundPtr& compound) const
 {
-	dll::UpperCommand* uc = compoundSwitch_->getFUN()->getCommandReader(ucCommandName_)->readCommand<dll::UpperCommand>(compound->getCommandPool());
+    dll::UpperCommand* uc = compoundSwitch_->getFUN()->getCommandReader(ucCommandName_)->readCommand<dll::UpperCommand>(compound->getCommandPool());
 
-	if(this->filterTarget_)
-	{
-		if(uc->peer.targetMACAddress == filterAddress_)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	else
-	{
-		if(uc->peer.sourceMACAddress == filterAddress_)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+    if(this->filterTarget_)
+    {
+        if(uc->peer.targetMACAddress == filterAddress_)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        if(uc->peer.sourceMACAddress == filterAddress_)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

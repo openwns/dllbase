@@ -36,23 +36,25 @@
 
 namespace dll { namespace compoundSwitch { namespace filter {
 
-   	/**
-	 * @brief This filter does not match at any compound.
+    /**
+     * @brief This filter does not match at any compound.
      * @author Markus Grauer <gra@comnets.rwth-aachen.de>
-	 *
-	 */
-	class FilterNone :
-		public Filter
-	{
-	public:
-		FilterNone(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config);
+     *
+     */
+    class FilterNone :
+        public Filter
+    {
+    public:
+        FilterNone(CompoundSwitch* compoundSwitch, wns::pyconfig::View& config);
 
-		~FilterNone();
+        ~FilterNone();
 
-		virtual bool
-		filter(const wns::ldk::CompoundPtr& compound) const;
-	};
+        virtual bool
+        filter(const wns::ldk::CompoundPtr& compound) const;
+    };
 
-}}}
+}
+}
+}
 
 #endif // not defined DLL_COMPOUNDSWITCH_FILTER_FILTERNONE_HPP
