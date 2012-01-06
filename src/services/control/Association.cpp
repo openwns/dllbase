@@ -46,7 +46,11 @@ Association::Association(wns::ldk::ControlServiceRegistry* csr, const wns::pycon
     slaveStations_(),
     logger_(config.get("logger"))
 {
-
+    if(!wns::simulator::getRegistry()->knows("DLLAssoc"))
+    {
+        std::map<int, int> assoc;
+        wns::simulator::getRegistry()->insert("DLLAssoc", assoc);
+    }
 }
 
 wns::service::dll::UnicastAddress
@@ -86,6 +90,11 @@ Association::registerAssociation(wns::service::dll::UnicastAddress slave, wns::s
     MESSAGE_BEGIN(NORMAL, logger_, m, serviceName_ + " registered association from : ");
     m << slave;
     MESSAGE_END();
+
+    std::map<int, int> assoc;
+    assoc = wns::simulator::getRegistry()->find<std::map<int, int> >("DLLAssoc");
+    assoc[slave.getInteger()] = master.getInteger();
+    wns::simulator::getRegistry()->update("DLLAssoc", assoc);
 
     this->AssociationInfo::forEachObserver(AssociationFunctor( &AssociationObserverInterface::onAssociated,
                                    slave,
@@ -147,6 +156,11 @@ Association::releaseClient(wns::service::dll::UnicastAddress slave)
     // safety check
     assure( std::find(slaveStations_.begin(), slaveStations_.end(), slave) != slaveStations_.end(),
         "Trying to release unknown client association" );
+
+    std::map<int, int> assoc;
+    assoc = wns::simulator::getRegistry()->find<std::map<int, int> >("DLLAssoc");
+    assoc.erase(slave.getInteger());
+    wns::simulator::getRegistry()->update("DLLAssoc", assoc);
 
     // remove from my set of slaves
     slaveStations_.remove(slave);

@@ -131,7 +131,15 @@ Layer2::doStartup()
 		addService(config.get<std::string>("flowEstablishmentAndRelease"), upperConvergence);
 		upperConvergence->setMACAddress(address);
 	}
-
+    if((getStationType() == wns::service::dll::StationTypes::eNB() || 
+        getStationType() == wns::service::dll::StationTypes::AP()) &&
+        wns::simulator::getRegistry()->knows("DLLAssoc"))
+    {
+        std::map<int, int> assoc;
+        assoc = wns::simulator::getRegistry()->find<std::map<int, int> >("DLLAssoc");
+        assoc[getDLLAddress().getInteger()] = getDLLAddress().getInteger();
+        wns::simulator::getRegistry()->update("DLLAssoc", assoc);
+    }
 } // Layer2
 
 Layer2::~Layer2()
@@ -140,6 +148,12 @@ Layer2::~Layer2()
 	delete fun;
 	fun = NULL;
     }
+
+    std::map<int, int>::iterator it;
+    std::map<int, int> assoc = wns::simulator::getRegistry()->find<std::map<int, int> >("DLLAssoc");
+    for(it = assoc.begin(); it != assoc.end(); it++)
+        std::cout << it->first << "->" << it->second << "\n";
+
 } // ~Layer2
 
 Layer2::StationIDType
